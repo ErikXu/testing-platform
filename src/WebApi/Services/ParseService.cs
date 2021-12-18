@@ -41,6 +41,7 @@ namespace WebApi.Services
 
             var result = new TaskResult
             {
+                Content = content,
                 Qps = qps,
                 LatencyP50 = p50,
                 LatencyP75 = p75,

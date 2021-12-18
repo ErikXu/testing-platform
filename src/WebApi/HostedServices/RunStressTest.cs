@@ -57,7 +57,7 @@ namespace WebApi.HostedServices
 
             _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndReplace(n => n.Id == task.Id, task);
 
-            var command = $"wrk -t {task.Thread} -c {task.Connection} -d {task.Duration}{task.Connection} --latency {task.Url}";
+            var command = $"wrk -t {task.Thread} -c {task.Connection} -d {task.Duration}{task.Unit} --latency {task.Url}";
 
             var (code, message) = ExecuteCommand(command);
 
