@@ -42,5 +42,21 @@ namespace WebApi.Mongo.Entities
     public class TaskResult
     {
         public string Content { get; set; }
+
+        public double Qps { get; set; }
+
+        public double LatencyP50 { get; set; }
+
+        public double LatencyP75 { get; set; }
+
+        public double LatencyP90 { get; set; }
+
+        public double LatencyP99 { get; set; }
+
+        public double LatencyAvg { get; set; }
+
+        public double LatencyStd { get; set; }
+
+        public double LatencyMax { get; set; }
     }
 }
