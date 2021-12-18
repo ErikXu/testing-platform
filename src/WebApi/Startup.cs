@@ -6,9 +6,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using MongoDB.Bson;
+using MongoDB.Integrations.JsonDotNet.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WebApi.Mongo;
 
@@ -25,7 +29,11 @@ namespace WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                // https://www.iaspnetcore.com/blog/blogpost/59996a44ac06ad108ca37b68
+                options.JsonSerializerOptions.Converters.Add(new JsonObjectIdConverterBySystemTextJson());
+            }); ;
 
             services.AddAutoMapper(typeof(Startup));
             services.AddMongoDbContext(Configuration);
@@ -54,6 +62,17 @@ namespace WebApi
             {
                 endpoints.MapControllers();
             });
+        }
+
+        public class JsonObjectIdConverterBySystemTextJson : JsonConverter<ObjectId>
+        {
+
+            public override ObjectId Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => new ObjectId(JsonSerializer.Deserialize<string>(ref reader, options));
+
+            public override void Write(Utf8JsonWriter writer, ObjectId value, JsonSerializerOptions options)
+            {
+                writer.WriteStringValue(value.ToString());
+            }
         }
     }
 }

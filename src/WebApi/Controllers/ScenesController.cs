@@ -26,7 +26,10 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> List()
         {
-            var list = await _mongoDbContext.Collection<Scene>().Find(new BsonDocument()).Sort(Builders<Scene>.Sort.Ascending(n => n.CreationTime)).ToListAsync();
+            var list = await _mongoDbContext.Collection<Scene>()
+                                            .Find(new BsonDocument())
+                                            .Sort(Builders<Scene>.Sort.Ascending(n => n.CreationTime))
+                                            .ToListAsync();
             return Ok(list);
         }
 
