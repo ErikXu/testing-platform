@@ -25,6 +25,8 @@ namespace WebApi.Mongo.Entities
 
         public bool IsBaseline { get; set; }
 
+        public TaskResult Result { get; set; }
+
         public DateTime CreationTime { get; set; }
     }
 
@@ -35,5 +37,10 @@ namespace WebApi.Mongo.Entities
         Running = 1,
 
         Done = 2
+    }
+
+    public class TaskResult
+    {
+        public string Content { get; set; }
     }
 }

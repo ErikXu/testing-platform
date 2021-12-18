@@ -32,14 +32,14 @@ namespace WebApi.HostedServices
 
         private void DoWork(object state)
         {
-            var isRunning = _mongoDbContext.Collection<Mongo.Entities.Task>()
-                                           .Find(n => n.Status == Mongo.Entities.TaskStatus.Running)
-                                           .Any();
+            //var isRunning = _mongoDbContext.Collection<Mongo.Entities.Task>()
+            //                               .Find(n => n.Status == Mongo.Entities.TaskStatus.Running)
+            //                               .Any();
 
-            if (isRunning)
-            {
-                return;
-            }
+            //if (isRunning)
+            //{
+            //    return;
+            //}
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
