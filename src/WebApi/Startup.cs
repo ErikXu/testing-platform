@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using WebApi.HostedServices;
 using WebApi.Mongo;
 
 namespace WebApi
@@ -45,6 +46,8 @@ namespace WebApi
 
             // https://www.c-sharpcorner.com/article/getting-started-with-vue-js-and-net-core-32/
             services.AddSpaStaticFiles(options => options.RootPath = "web");
+
+            services.AddHostedService<RunStressTest>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

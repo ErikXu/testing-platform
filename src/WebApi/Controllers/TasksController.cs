@@ -14,12 +14,10 @@ namespace WebApi.Controllers
     public class TasksController : ControllerBase
     {
         private readonly MongoDbContext _mongoDbContext;
-        private readonly IMapper _mapper;
 
-        public TasksController(MongoDbContext mongoDbContext, IMapper mapper)
+        public TasksController(MongoDbContext mongoDbContext)
         {
             _mongoDbContext = mongoDbContext;
-            _mapper = mapper;
         }
 
 
