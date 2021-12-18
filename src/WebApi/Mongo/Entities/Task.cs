@@ -36,7 +36,9 @@ namespace WebApi.Mongo.Entities
 
         Running = 1,
 
-        Done = 2
+        Done = 2,
+
+        Error = 3
     }
 
     public class TaskResult

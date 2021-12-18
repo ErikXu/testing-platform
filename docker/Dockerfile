@@ -12,6 +12,8 @@ RUN apk add --no-cache \
         libstdc++ \
         zlib
 
+RUN apk add wrk
+
 COPY . /app
 WORKDIR /app
 EXPOSE 5000

@@ -16,6 +16,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WebApi.HostedServices;
 using WebApi.Mongo;
+using WebApi.Services;
 
 namespace WebApi
 {
@@ -48,6 +49,8 @@ namespace WebApi
             services.AddSpaStaticFiles(options => options.RootPath = "web");
 
             services.AddHostedService<RunStressTest>();
+
+            services.AddSingleton<IParseService, ParseService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
