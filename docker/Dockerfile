@@ -16,4 +16,4 @@ COPY . /app
 WORKDIR /app
 EXPOSE 5000
 
-ENTRYPOINT ["/app/WebApi", "--urls=http://*:5000"]
+ENTRYPOINT ["/app/webapi", "--urls=http://*:5000"]
