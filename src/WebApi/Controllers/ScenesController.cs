@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Models;
 using WebApi.Mongo;
@@ -17,10 +19,40 @@ namespace WebApi.Controllers
         private readonly MongoDbContext _mongoDbContext;
         private readonly IMapper _mapper;
 
+        private readonly Dictionary<string, string> _methodDic = new Dictionary<string, string>
+        {
+            { "GET", "GET" },
+            //{ "POST", "POST" },
+            //{ "PUT", "PUT" },
+            //{ "PATCH", "PATCH" },
+            { "DELETE", "DELETE" }
+        };
+
+        private readonly Dictionary<string, string> _uintDic = new Dictionary<string, string>
+        {
+            { "s", "Second" },
+            { "m", "Munite" },
+            { "h", "Hour" }
+        };
+
         public ScenesController(MongoDbContext mongoDbContext, IMapper mapper)
         {
             _mongoDbContext = mongoDbContext;
             _mapper = mapper;
+        }
+
+        [HttpGet("method")]
+        public IActionResult MethodList()
+        {
+            var list = _methodDic.Select(n => new { Id = n.Key, Text = n.Value }).ToList();
+            return Ok(list);
+        }
+
+        [HttpGet("unit")]
+        public IActionResult UnitList()
+        {
+            var list = _uintDic.Select(n => new { Id = n.Key, Text = n.Value }).ToList();
+            return Ok(list);
         }
 
         [HttpGet]
