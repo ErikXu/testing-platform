@@ -16,6 +16,6 @@ RUN apk add wrk
 
 COPY . /app
 WORKDIR /app
-EXPOSE 5000
+EXPOSE 80
 
-ENTRYPOINT ["/app/webapi", "--urls=http://*:5000"]
+ENTRYPOINT ["/app/webapi", "--urls=http://*:80"]
