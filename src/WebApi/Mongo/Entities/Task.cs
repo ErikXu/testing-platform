@@ -23,9 +23,15 @@ namespace WebApi.Mongo.Entities
 
         public TaskStatus Status { get; set; }
 
+        public string Message { get; set; }
+
         public bool IsBaseline { get; set; }
 
         public TaskResult Result { get; set; }
+
+        public DateTime StartRunningTime { get; set; }
+
+        public DateTime EndRunningTime { get; set; }
 
         public DateTime CreationTime { get; set; }
     }

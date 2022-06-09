@@ -54,24 +54,35 @@ namespace WebApi.HostedServices
             }
 
             task.Status = Mongo.Entities.TaskStatus.Running;
+            task.StartRunningTime = DateTime.UtcNow;
 
             _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndReplace(n => n.Id == task.Id, task);
 
             var command = $"wrk -t {task.Thread} -c {task.Connection} -d {task.Duration}{task.Unit} --latency {task.Url}";
 
-            var (code, message) = ExecuteCommand(command);
+            try
+            {
+                var (code, message) = ExecuteCommand(command);
 
-            if (code != 0)
+                if (code != 0)
+                {
+                    task.Status = Mongo.Entities.TaskStatus.Error;
+                    task.Message = message;
+                }
+                else
+                {
+                    var result = _parseService.ParseStressTestResult(message);
+                    task.Status = Mongo.Entities.TaskStatus.Done;
+                    task.Result = result;
+                }
+            }
+            catch (Exception ex)
             {
                 task.Status = Mongo.Entities.TaskStatus.Error;
-            }
-            else
-            {
-                var result = _parseService.ParseStressTestResult(message);
-                task.Status = Mongo.Entities.TaskStatus.Done;
-                task.Result = result;
+                task.Message = ex.Message;
             }
 
+            task.EndRunningTime = DateTime.UtcNow;
             _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndReplace(n => n.Id == task.Id, task);
         }
 
