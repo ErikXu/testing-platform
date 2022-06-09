@@ -10,7 +10,9 @@ using MongoDB.Bson;
 using MongoDB.Integrations.JsonDotNet.Converters;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -31,11 +33,9 @@ namespace WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddJsonOptions(options =>
-            {
-                // https://www.iaspnetcore.com/blog/blogpost/59996a44ac06ad108ca37b68
-                options.JsonSerializerOptions.Converters.Add(new JsonObjectIdConverterBySystemTextJson());
-            }); ;
+            // Use NewtonsoftJson as default JSON Serializer,
+            // https://anthonygiretti.com/2020/05/10/why-model-binding-to-jobject-from-a-request-doesnt-work-anymore-in-asp-net-core-3-1-and-whats-the-alternative/
+            services.AddControllers().AddNewtonsoftJson();
 
             services.AddAutoMapper(typeof(Startup));
             services.AddMongoDbContext(Configuration);
@@ -43,11 +43,10 @@ namespace WebApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
-
-            // Use NewtonsoftJson as default JSON Serializer,
-            // https://anthonygiretti.com/2020/05/10/why-model-binding-to-jobject-from-a-request-doesnt-work-anymore-in-asp-net-core-3-1-and-whats-the-alternative/
-            services.AddControllers().AddNewtonsoftJson();
 
             // https://www.c-sharpcorner.com/article/getting-started-with-vue-js-and-net-core-32/
             services.AddSpaStaticFiles(options => options.RootPath = "web");
