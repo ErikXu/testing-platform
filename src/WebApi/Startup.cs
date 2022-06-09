@@ -45,6 +45,10 @@ namespace WebApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
             });
 
+            // Use NewtonsoftJson as default JSON Serializer,
+            // https://anthonygiretti.com/2020/05/10/why-model-binding-to-jobject-from-a-request-doesnt-work-anymore-in-asp-net-core-3-1-and-whats-the-alternative/
+            services.AddControllers().AddNewtonsoftJson();
+
             // https://www.c-sharpcorner.com/article/getting-started-with-vue-js-and-net-core-32/
             services.AddSpaStaticFiles(options => options.RootPath = "web");
 
