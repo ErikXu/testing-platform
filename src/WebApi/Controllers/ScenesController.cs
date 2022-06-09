@@ -77,7 +77,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Create Scene
+        /// Create scene
         /// </summary>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] SceneCreateForm form)
