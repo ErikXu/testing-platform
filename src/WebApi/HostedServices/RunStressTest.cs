@@ -68,7 +68,7 @@ namespace WebApi.HostedServices
                 if (code != 0)
                 {
                     task.Status = Mongo.Entities.TaskStatus.Error;
-                    task.Message = message;
+                    task.Message = "[Error]" + message;
                 }
                 else
                 {
@@ -80,7 +80,7 @@ namespace WebApi.HostedServices
             catch (Exception ex)
             {
                 task.Status = Mongo.Entities.TaskStatus.Error;
-                task.Message = ex.Message;
+                task.Message = "[Exception]" + ex.Message;
             }
 
             task.EndRunningTime = DateTime.UtcNow;
