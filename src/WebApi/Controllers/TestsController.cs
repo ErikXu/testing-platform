@@ -1,18 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
 using WebApi.Models;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/tests")]
     [ApiController]
     public class TestsController : ControllerBase
     {
-        [HttpGet("Get")]
+        [HttpGet("get")]
         public IActionResult Get()
         {
             var result = new TestResult()
@@ -26,7 +25,7 @@ namespace WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpPost("Post")]
+        [HttpPost("post")]
         public IActionResult Post([FromBody] dynamic body)
         {
             var result = new TestResult()
@@ -41,7 +40,7 @@ namespace WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpPatch("Patch")]
+        [HttpPatch("patch")]
         public IActionResult Patch([FromBody] dynamic body)
         {
             var result = new TestResult()
@@ -56,7 +55,7 @@ namespace WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpPut("Put")]
+        [HttpPut("put")]
         public IActionResult Put([FromBody] dynamic body)
         {
             var result = new TestResult()
@@ -71,7 +70,7 @@ namespace WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("Delete")]
+        [HttpDelete("delete")]
         public IActionResult Delete()
         {
             var result = new TestResult()
@@ -85,7 +84,7 @@ namespace WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpPost("Form")]
+        [HttpPost("form")]
         public IActionResult Form()
         {
             var result = new TestResult()

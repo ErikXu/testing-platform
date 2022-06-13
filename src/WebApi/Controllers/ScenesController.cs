@@ -12,7 +12,7 @@ using WebApi.Mongo.Entities;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/scenes")]
     [ApiController]
     public class ScenesController : ControllerBase
     {

@@ -6,7 +6,7 @@ using WebApi.Mongo.Entities;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/systems")]
     [ApiController]
     public class SystemsController : ControllerBase
     {
@@ -20,7 +20,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Remove the whole data
         /// </summary>
-        [HttpDelete("Reset")]
+        [HttpDelete("reset")]
         public async Task<IActionResult> Reset()
         {
             await _mongoDbContext.Collection<Scene>().DeleteManyAsync(new BsonDocument());
