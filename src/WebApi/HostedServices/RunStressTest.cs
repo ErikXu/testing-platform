@@ -3,6 +3,8 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApi.Mongo;
@@ -58,7 +60,9 @@ namespace WebApi.HostedServices
 
             _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndReplace(n => n.Id == task.Id, task);
 
-            var command = $"wrk -t {task.Thread} -c {task.Connection} -d {task.Duration}{task.Unit} --latency {task.Url}";
+            var script = GenerateScript(task);
+            
+            var command = $"wrk -t {task.Thread} -c {task.Connection} -s {script} -d {task.Duration}{task.Unit} --latency {task.Url}";
             task.Command = command;
 
             try
@@ -85,6 +89,26 @@ namespace WebApi.HostedServices
 
             task.EndRunningTime = DateTime.UtcNow;
             _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndReplace(n => n.Id == task.Id, task);
+        }
+
+        private string GenerateScript(Mongo.Entities.Task task)
+        {
+            var script = new StringBuilder();
+            script.AppendLine($"wrk.method = \"{task.Method}\"");
+            script.AppendLine("wrk.headers[\"Content-Type\"] = \"application/json\"");
+
+            if (task.Method == Program.MethodPost || task.Method == Program.MethodPut || task.Method == Program.MethodPatch)
+            {
+                script.AppendLine($"wrk.body = \"{task.Body}\"");
+            }
+
+            task.Script = script.ToString();
+
+            var scriptPath = Path.Combine(Program.TempFolder, $"{Guid.NewGuid()}.lua");
+
+            File.WriteAllText(scriptPath, task.Script);
+
+            return scriptPath;
         }
 
         private static (int, string) ExecuteCommand(string command)

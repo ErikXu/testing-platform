@@ -23,6 +23,8 @@ namespace WebApi.Mongo.Entities
 
         public TaskStatus Status { get; set; }
 
+        public string Script { get; set; }
+
         public string Command { get; set; }
 
         public string Message { get; set; }

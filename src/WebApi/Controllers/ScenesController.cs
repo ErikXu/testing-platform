@@ -21,11 +21,11 @@ namespace WebApi.Controllers
 
         private readonly Dictionary<string, string> _methodDic = new Dictionary<string, string>
         {
-            { "GET", "GET" },
-            //{ "POST", "POST" },
-            //{ "PUT", "PUT" },
-            //{ "PATCH", "PATCH" },
-            { "DELETE", "DELETE" }
+            { Program.MethodGet, Program.MethodGet },
+            { Program.MethodPost, Program.MethodPost },
+            { Program.MethodPut, Program.MethodPut },
+            { Program.MethodPatch, Program.MethodPatch },
+            { Program.MethodDelete, Program.MethodDelete }
         };
 
         private readonly Dictionary<string, string> _uintDic = new Dictionary<string, string>
