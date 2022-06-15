@@ -11,9 +11,9 @@
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Baseline" align="left">
+      <el-table-column label="Current" align="left">
         <template slot-scope="scope">
-          <span>{{ scope.row.baseline }}</span>
+          <span>{{ scope.row.current }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Previous" align="left">
@@ -21,9 +21,9 @@
           <span>{{ scope.row.previous }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Current" align="left">
+      <el-table-column label="Baseline" align="left">
         <template slot-scope="scope">
-          <span>{{ scope.row.current }}</span>
+          <span>{{ scope.row.baseline }}</span>
         </template>
       </el-table-column>
     </el-table>

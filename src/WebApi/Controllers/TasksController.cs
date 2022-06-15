@@ -140,29 +140,29 @@ namespace WebApi.Controllers
                 Current = current?.Duration
             };
 
-            if (baseline.Unit == "m")
+            if (baseline?.Unit == "m")
             {
                 item.Baseline = baseline?.Duration * 60;
             }
-            else if (baseline.Unit == "h")
+            else if (baseline?.Unit == "h")
             {
                 item.Baseline = baseline?.Duration * 60 * 60;
             }
 
-            if (previous.Unit == "m")
+            if (previous?.Unit == "m")
             {
                 item.Previous = previous?.Duration * 60;
             }
-            else if (previous.Unit == "h")
+            else if (previous?.Unit == "h")
             {
                 item.Previous = previous?.Duration * 60 * 60;
             }
 
-            if (current.Unit == "m")
+            if (current?.Unit == "m")
             {
                 item.Current = current?.Duration * 60;
             }
-            else if (previous.Unit == "h")
+            else if (current?.Unit == "h")
             {
                 item.Current = current?.Duration * 60 * 60;
             }
