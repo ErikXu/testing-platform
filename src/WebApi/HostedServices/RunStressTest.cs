@@ -60,19 +60,19 @@ namespace WebApi.HostedServices
 
             _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndReplace(n => n.Id == task.Id, task);
 
-            var script = GenerateScript(task);
-
-            task.Device = new Mongo.Entities.Device
-            {
-                TotalMem = GetTotalMem(),
-                AvailableMem = GetAvailableMem()
-            };
-
-            var command = $"wrk -t {task.Thread} -c {task.Connection} -s {script} -d {task.Duration}{task.Unit} --latency {task.Url}";
-            task.Command = command;
-
             try
             {
+                var script = GenerateScript(task);
+
+                task.Device = new Mongo.Entities.Device
+                {
+                    TotalMem = GetTotalMem(),
+                    AvailableMem = GetAvailableMem()
+                };
+
+                var command = $"wrk -t {task.Thread} -c {task.Connection} -s {script} -d {task.Duration}{task.Unit} --latency {task.Url}";
+                task.Command = command;
+
                 var (code, message) = ExecuteCommand(command);
 
                 if (code != 0)

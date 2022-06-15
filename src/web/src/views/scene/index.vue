@@ -48,10 +48,15 @@
           <span>{{ scope.row.duration + scope.row.unit }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Run" align="center" width="80">
-        <el-button type="success" size="mini">
-          Run
-        </el-button>
+      <el-table-column label="Operation" align="center" width="150">
+        <template slot-scope="{row}">
+          <el-button type="success" size="mini" @click="run(row)">
+            Run
+          </el-button>
+          <el-button type="primary" size="mini" @click="detail(row)">
+            Detail
+          </el-button>
+        </template>
       </el-table-column>
     </el-table>
 
@@ -105,6 +110,8 @@
 
 <script>
 import { getMethodList, getUnitList, getSceneList, addScene } from '@/api/scene'
+import { addTask } from '@/api/task'
+
 export default {
   name: 'Scene',
   data() {
@@ -115,12 +122,12 @@ export default {
       formVisible: false,
       submiting: false,
       form: {
-        name: null,
-        url: null,
+        name: 'My Scene',
+        url: 'http://localhost/api/tests/get',
         method: 'GET',
         thread: 1,
         connection: 1,
-        duration: 1,
+        duration: 5,
         unit: 's'
       },
       rules: {
@@ -148,6 +155,19 @@ export default {
       this.submiting = false
       this.formVisible = true
     },
+    run(row) {
+      addTask(row.id).then(response => {
+        this.list = response
+        this.$message({
+          type: 'success',
+          message: 'Run success!'
+        })
+        this.$router.push({ name: 'scene-detail', params: { id: row.id }})
+      })
+    },
+    detail(row) {
+      this.$router.push({ name: 'scene-detail', params: { id: row.id }})
+    },
     submit() {
       this.$refs.sceneForm.validate(valid => {
         if (valid) {
@@ -155,7 +175,7 @@ export default {
           addScene(this.form).then(() => {
             this.$message({
               type: 'success',
-              message: '创建成功!'
+              message: 'Submit success!'
             })
             this.fetchData()
             this.formVisible = false

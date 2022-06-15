@@ -41,6 +41,9 @@ namespace WebApi.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Get scene method list
+        /// </summary>
         [HttpGet("method")]
         public IActionResult MethodList()
         {
@@ -48,6 +51,9 @@ namespace WebApi.Controllers
             return Ok(list);
         }
 
+        /// <summary>
+        /// Get scene unit list
+        /// </summary>
         [HttpGet("unit")]
         public IActionResult UnitList()
         {
@@ -55,6 +61,9 @@ namespace WebApi.Controllers
             return Ok(list);
         }
 
+        /// <summary>
+        /// Get scene list
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> List()
         {
@@ -65,6 +74,9 @@ namespace WebApi.Controllers
             return Ok(list);
         }
 
+        /// <summary>
+        /// Get scene by id
+        /// </summary>
         [HttpGet("{id}", Name = "GetScene")]
         public async Task<IActionResult> Get([FromRoute] string id)
         {
@@ -74,6 +86,19 @@ namespace WebApi.Controllers
                 return NotFound();
             }
             return Ok(scene);
+        }
+
+        /// <summary>
+        /// Get tasks of scene
+        /// </summary>
+        [HttpGet("{id}/tasks")]
+        public async Task<IActionResult> ListByScene([FromRoute] string id)
+        {
+            var list = await _mongoDbContext.Collection<Mongo.Entities.Task>()
+                                            .Find(n => n.SceneId == new ObjectId(id))
+                                            .Sort(Builders<Mongo.Entities.Task>.Sort.Descending(n => n.CreationTime))
+                                            .ToListAsync();
+            return Ok(list);
         }
 
         /// <summary>

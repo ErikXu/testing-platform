@@ -33,6 +33,16 @@ Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
 
+Vue.filter('simpleFormat', function(date) {
+  const moment = require('moment')
+
+  if (date === undefined || date === null || date === '') {
+    return date
+  } else {
+    return moment.utc(date).local().format('YYYY-MM-DD HH:mm:ss')
+  }
+})
+
 Vue.config.productionTip = false
 
 new Vue({

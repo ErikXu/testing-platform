@@ -51,19 +51,46 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: 'Dashboard', icon: 'el-icon-s-home' }
     }]
   },
 
   {
     path: '/scene',
     component: Layout,
-    children: [{
-      path: 'index',
-      name: 'scene',
-      component: () => import('@/views/scene/index'),
-      meta: { title: 'Scene', icon: 'form' }
-    }]
+    children: [
+      {
+        path: 'index',
+        name: 'scene',
+        component: () => import('@/views/scene/index'),
+        meta: { title: 'Scene', icon: 'el-icon-folder' }
+      },
+      {
+        path: ':id',
+        name: 'scene-detail',
+        component: () => import('@/views/scene/detail'),
+        hidden: true
+      }
+    ]
+  },
+
+  {
+    path: '/task',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'task',
+        component: () => import('@/views/task/index'),
+        meta: { title: 'Task', icon: 'el-icon-document' }
+      },
+      {
+        path: ':id/report',
+        name: 'task-report',
+        component: () => import('@/views/task/report'),
+        hidden: true
+      }
+    ]
   },
 
   // 404 page must be placed at the end !!!
