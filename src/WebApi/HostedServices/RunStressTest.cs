@@ -61,7 +61,13 @@ namespace WebApi.HostedServices
             _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndReplace(n => n.Id == task.Id, task);
 
             var script = GenerateScript(task);
-            
+
+            task.Device = new Mongo.Entities.Device
+            {
+                TotalMem = GetTotalMem(),
+                AvailableMem = GetAvailableMem()
+            };
+
             var command = $"wrk -t {task.Thread} -c {task.Connection} -s {script} -d {task.Duration}{task.Unit} --latency {task.Url}";
             task.Command = command;
 
@@ -89,6 +95,55 @@ namespace WebApi.HostedServices
 
             task.EndRunningTime = DateTime.UtcNow;
             _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndReplace(n => n.Id == task.Id, task);
+        }
+
+        private int GetTotalMem()
+        {
+            var result = GetDevice("cat /proc/meminfo | grep 'MemTotal' | awk -F':' '{print $2}'");
+
+            if (result == null)
+            {
+                return 0;
+            }
+
+            var value = result.ToLower().Replace("kb", string.Empty).Trim();
+
+            return int.Parse(value) / 1024;
+        }
+
+        private int GetAvailableMem()
+        {
+            var result = GetDevice("cat /proc/meminfo | grep 'MemFree' | awk -F':' '{print $2}'");
+
+            if (result == null)
+            {
+                return 0;
+            }
+
+            var value = result.ToLower().Replace("kb", string.Empty).Trim();
+
+            return int.Parse(value) / 1024;
+        }
+
+        private string GetDevice(string command)
+        {
+            try
+            {
+                var (code, message) = ExecuteCommand(command);
+
+                if (code == 0)
+                {
+                    return message;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private string GenerateScript(Mongo.Entities.Task task)
