@@ -107,7 +107,7 @@ namespace WebApi.HostedServices
         {
             try
             {
-                var (code, message, processId) = ExecuteCommand("shellinaboxd -t -b -p 8080 --no-beep -s '/:nobody:nogroup:/:htop -d 10'");
+                var (code, message, processId) = ExecuteCommand("shellinaboxd -t -b -p 8080 --no-beep -s '/:nobody:nogroup:/:htop -d 10'", false);
                 if (code != 0)
                 {
                     _logger.LogError(message);
@@ -135,7 +135,7 @@ namespace WebApi.HostedServices
 
             try
             {
-                var (code, message, _) = ExecuteCommand("shellinaboxd -t -b -p 8080 --no-beep -s '/:nobody:nogroup:/:htop -d 10'");
+                var (code, message, _) = ExecuteCommand($"kill -9 {processId}");
                 if (code != 0)
                 {
                     _logger.LogError(message);
@@ -216,7 +216,7 @@ namespace WebApi.HostedServices
             return scriptPath;
         }
 
-        private static (int, string, int) ExecuteCommand(string command)
+        private static (int, string, int) ExecuteCommand(string command, bool waitForExit = true)
         {
             var escapedArgs = command.Replace("\"", "\\\"");
             var process = new Process
@@ -233,8 +233,12 @@ namespace WebApi.HostedServices
             };
 
             process.Start();
-            process.WaitForExit();
 
+            if (waitForExit)
+            {
+                process.WaitForExit();
+            }
+            
             var message = process.StandardOutput.ReadToEnd();
             if (process.ExitCode != 0)
             {
