@@ -107,7 +107,7 @@ namespace WebApi.HostedServices
         {
             try
             {
-                var (code, message) = ExecuteBackgroundCommand("shellinaboxd -t -b -p 8080 --no-beep -s '/:nobody:nogroup:/:htop -d 10'");
+                var (code, message) = ExecuteBackgroundCommand("shellinaboxd -t -b -p 8080 --no-beep -s '/:root:root:/:htop -d 10'");
                 if (code != 0)
                 {
                     _logger.LogError(message);
@@ -127,14 +127,18 @@ namespace WebApi.HostedServices
                 if (code != 0)
                 {
                     _logger.LogError(message);
+                    return;
                 }
 
                 if (string.IsNullOrWhiteSpace(message))
                 {
                     _logger.LogError("Process [shellinaboxd] is not found!");
+                    return;
                 }
 
                 var processId = message;
+                _logger.LogInformation($"Process Id of [shellinaboxd] is {processId}!");
+
                 (code, message) = ExecuteCommand($"kill -9 {processId}");
                 if (code != 0)
                 {
