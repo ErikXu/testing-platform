@@ -17,9 +17,12 @@
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Status" align="left">
+      <el-table-column label="Status" align="center" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.status }}</span>
+          <el-tag v-if="scope.row.status === 0" type="info" size="small">Waiting</el-tag>
+          <el-tag v-else-if="scope.row.status === 1" type="primary" size="small">Runing</el-tag>
+          <el-tag v-else-if="scope.row.status === 2" type="success" size="small">Done</el-tag>
+          <el-tag v-else-if="scope.row.status === 3" type="danger" size="small">Error</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="IsBaseline" align="left" width="100">
