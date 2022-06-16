@@ -107,7 +107,7 @@ namespace WebApi.HostedServices
         {
             try
             {
-                var (code, message, processId) = ExecuteCommand("shellinaboxd -t -b -p 8080 --no-beep -s '/:nobody:nogroup:/:htop -d 10'", false);
+                var (code, message, processId) = ExecuteCommand("shellinaboxd -t -p 8080 --no-beep -s '/:nobody:nogroup:/:htop -d 10'", false);
                 if (code != 0)
                 {
                     _logger.LogError(message);
