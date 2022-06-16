@@ -60,10 +60,13 @@ namespace WebApi.HostedServices
 
             _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndReplace(n => n.Id == task.Id, task);
 
-           StartHtop();
+            StartHtop();
 
             try
             {
+                var command = "shellinaboxd -t -b -p 8080 --no-beep -s '/:nobody:nogroup:/:htop -d 10'";
+                var (code, message) = ExecuteBackgroundCommand(command);
+
                 var script = GenerateScript(task);
 
                 task.Device = new Mongo.Entities.Device
@@ -72,10 +75,10 @@ namespace WebApi.HostedServices
                     AvailableMem = GetAvailableMem()
                 };
 
-                var command = $"wrk -t {task.Thread} -c {task.Connection} -s {script} -d {task.Duration}{task.Unit} --latency {task.Url}";
+                command = $"wrk -t {task.Thread} -c {task.Connection} -s {script} -d {task.Duration}{task.Unit} --latency {task.Url}";
                 task.Command = command;
 
-                var (code, message) = ExecuteCommand(command);
+                (code, message) = ExecuteCommand(command);
 
                 if (code != 0)
                 {
@@ -89,6 +92,11 @@ namespace WebApi.HostedServices
                     task.Status = Mongo.Entities.TaskStatus.Done;
                     task.Result = result;
                 }
+
+                (code, message) = ExecuteCommand("pgrep -f shellinaboxd -o");
+                var processId = message.Trim();
+                _logger.LogInformation($"Process Id of [shellinaboxd] is {processId}!");
+                ExecuteCommand($"kill -9 {processId}");
             }
             catch (Exception ex)
             {
@@ -96,8 +104,6 @@ namespace WebApi.HostedServices
                 task.Message = "[Exception]" + ex.Message;
                 _logger.LogError(ex.Message);
             }
-
-            KillHtop();
 
             task.EndRunningTime = DateTime.UtcNow;
             _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndReplace(n => n.Id == task.Id, task);
