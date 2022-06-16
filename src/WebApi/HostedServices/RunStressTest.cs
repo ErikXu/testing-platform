@@ -136,10 +136,10 @@ namespace WebApi.HostedServices
                     return;
                 }
 
-                var processId = message;
+                var processId = message.Trim();
                 _logger.LogInformation($"Process Id of [shellinaboxd] is {processId}!");
 
-                (code, message) = ExecuteBackgroundCommand($"kill -9 {processId}");
+                (code, message) = ExecuteCommand($"kill -9 {processId}");
                 if (code != 0)
                 {
                     _logger.LogError(message);
