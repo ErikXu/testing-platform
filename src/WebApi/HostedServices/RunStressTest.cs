@@ -60,7 +60,7 @@ namespace WebApi.HostedServices
 
             _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndReplace(n => n.Id == task.Id, task);
 
-            var processId = StartHtop();
+           StartHtop();
 
             try
             {
@@ -75,7 +75,7 @@ namespace WebApi.HostedServices
                 var command = $"wrk -t {task.Thread} -c {task.Connection} -s {script} -d {task.Duration}{task.Unit} --latency {task.Url}";
                 task.Command = command;
 
-                var (code, message, _) = ExecuteCommand(command);
+                var (code, message) = ExecuteCommand(command);
 
                 if (code != 0)
                 {
@@ -97,45 +97,45 @@ namespace WebApi.HostedServices
                 _logger.LogError(ex.Message);
             }
 
-            KillHtop(processId);
+            KillHtop();
 
             task.EndRunningTime = DateTime.UtcNow;
             _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndReplace(n => n.Id == task.Id, task);
         }
 
-        private int StartHtop()
+        private void StartHtop()
         {
             try
             {
-                var (code, message, processId) = ExecuteCommand("shellinaboxd -t -p 8080 --no-beep -s '/:nobody:nogroup:/:htop -d 10'", false);
+                var (code, message) = ExecuteBackgroundCommand("shellinaboxd -t -b -p 8080 --no-beep -s '/:nobody:nogroup:/:htop -d 10'");
                 if (code != 0)
                 {
                     _logger.LogError(message);
-                    return 0;
-                }
-                else
-                {
-                    _logger.LogInformation($"Htop processId: {processId}");
-                    return processId;
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return 0;
             }
         }
 
-        private void KillHtop(int processId)
+        private void KillHtop()
         {
-            if (processId == 0)
-            {
-                return;
-            }
-
             try
             {
-                var (code, message, _) = ExecuteCommand($"kill -9 {processId}");
+                var (code, message) = ExecuteCommand("pgrep -f shellinaboxd -o");
+                if (code != 0)
+                {
+                    _logger.LogError(message);
+                }
+
+                if (string.IsNullOrWhiteSpace(message))
+                {
+                    _logger.LogError("Process [shellinaboxd] is not found!");
+                }
+
+                var processId = message;
+                (code, message) = ExecuteCommand($"kill -9 {processId}");
                 if (code != 0)
                 {
                     _logger.LogError(message);
@@ -179,7 +179,7 @@ namespace WebApi.HostedServices
         {
             try
             {
-                var (code, message, _) = ExecuteCommand(command);
+                var (code, message) = ExecuteCommand(command);
 
                 if (code == 0)
                 {
@@ -216,7 +216,7 @@ namespace WebApi.HostedServices
             return scriptPath;
         }
 
-        private static (int, string, int) ExecuteCommand(string command, bool waitForExit = true)
+        private static (int, string) ExecuteCommand(string command)
         {
             var escapedArgs = command.Replace("\"", "\\\"");
             var process = new Process
@@ -233,19 +233,44 @@ namespace WebApi.HostedServices
             };
 
             process.Start();
+            process.WaitForExit();
 
-            if (waitForExit)
-            {
-                process.WaitForExit();
-            }
-            
             var message = process.StandardOutput.ReadToEnd();
             if (process.ExitCode != 0)
             {
                 message = process.StandardError.ReadToEnd();
             }
 
-            return (process.ExitCode, message, process.Id);
+            return (process.ExitCode, message);
+        }
+
+        private static (int, string) ExecuteBackgroundCommand(string command)
+        {
+            var escapedArgs = command.Replace("\"", "\\\"");
+
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "/bin/sh",
+                    Arguments = $"-c \"{escapedArgs}\"",
+                    RedirectStandardOutput = false,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            process.Start();
+            process.WaitForExit();
+
+            var message = string.Empty;
+            if (process.ExitCode != 0)
+            {
+                message = process.StandardError.ReadToEnd();
+            }
+
+            return (process.ExitCode, message);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
