@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Text;
 
 namespace WebApi.Models
@@ -26,26 +27,38 @@ namespace WebApi.Models
             content.AppendLine("------ Origin ------");
             content.AppendLine(Origin);
           
-            content.AppendLine("------ Headers ------");
-            foreach (var header in Headers)
+            if (Headers != null && Headers.Count > 0)
             {
-                content.AppendLine($"{header.Key}: {header.Value}");
+                content.AppendLine("------ Headers ------");
+                foreach (var header in Headers)
+                {
+                    content.AppendLine($"{header.Key}: {header.Value}");
+                }
             }
 
-            content.AppendLine("------ Queries ------");
-            foreach (var query in Queries)
+            if (Queries != null && Queries.Count > 0)
             {
-                content.AppendLine($"{query.Key}: {query.Value}");
+                content.AppendLine("------ Queries ------");
+                foreach (var query in Queries)
+                {
+                    content.AppendLine($"{query.Key}: {query.Value}");
+                }
             }
 
-            content.AppendLine("------ Forms ------");
-            foreach (var form in Forms)
+            if (Forms != null && Forms.Count > 0)
             {
-                content.AppendLine($"{form.Key}: {form.Value}");
+                content.AppendLine("------ Forms ------");
+                foreach (var form in Forms)
+                {
+                    content.AppendLine($"{form.Key}: {form.Value}");
+                }
             }
 
-            content.AppendLine("------ Body ------");
-            content.AppendLine(Body);
+            if (Body != null)
+            {
+                content.AppendLine("------ Body ------");
+                content.AppendLine(JsonConvert.SerializeObject(Body));
+            }
 
             return content.ToString();
         }
