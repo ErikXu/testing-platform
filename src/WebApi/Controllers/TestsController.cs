@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using WebApi.Models;
@@ -11,6 +12,13 @@ namespace WebApi.Controllers
     [ApiController]
     public class TestsController : ControllerBase
     {
+        private readonly ILogger<TestsController> _logger;
+
+        public TestsController(ILogger<TestsController> logger)
+        {
+            _logger = logger;
+        }
+
         [HttpGet("get")]
         public IActionResult Get()
         {
@@ -21,6 +29,8 @@ namespace WebApi.Controllers
                 Queries = GetQueries(Request),
                 Headers = GetHeaders(Request)
             };
+
+            _logger.LogInformation(result.ToString());
 
             return Ok(result);
         }
@@ -37,6 +47,8 @@ namespace WebApi.Controllers
                 Body = body
             };
 
+            _logger.LogInformation(result.ToString());
+
             return Ok(result);
         }
 
@@ -51,6 +63,8 @@ namespace WebApi.Controllers
                 Headers = GetHeaders(Request),
                 Body = body
             };
+
+            _logger.LogInformation(result.ToString());
 
             return Ok(result);
         }
@@ -67,6 +81,8 @@ namespace WebApi.Controllers
                 Body = body
             };
 
+            _logger.LogInformation(result.ToString());
+
             return Ok(result);
         }
 
@@ -80,6 +96,8 @@ namespace WebApi.Controllers
                 Queries = GetQueries(Request),
                 Headers = GetHeaders(Request)
             };
+
+            _logger.LogInformation(result.ToString());
 
             return Ok(result);
         }
@@ -95,6 +113,8 @@ namespace WebApi.Controllers
                 Headers = GetHeaders(Request),
                 Forms = GetForms(Request)
             };
+
+            _logger.LogInformation(result.ToString());
 
             return Ok(result);
         }
