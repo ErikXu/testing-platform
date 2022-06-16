@@ -108,6 +108,45 @@ namespace WebApi.Controllers
             return CreatedAtRoute("GetTask", new { id = task.Id.ToString() }, task);
         }
 
+        [HttpPatch("{id}/baseline")]
+        public async Task<IActionResult> SetAsBaseline([FromRoute] string id)
+        {
+            var task = await _mongoDbContext.Collection<Mongo.Entities.Task>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
+            if (task == null)
+            {
+                return NotFound();
+            }
+
+            if (task.Status != Mongo.Entities.TaskStatus.Done)
+            {
+                return BadRequest("This task is not finished!");
+            }
+
+            var baseline = await _mongoDbContext.Collection<Mongo.Entities.Task>().Find(n => n.SceneId == task.SceneId && n.IsBaseline).SingleOrDefaultAsync();
+
+            if (baseline != null)
+            {
+                if (baseline.Id == new ObjectId(id))
+                {
+                    return Ok();
+                }
+                else
+                {
+                    var filter = Builders<Mongo.Entities.Task>.Filter.Where(a => a.Id == baseline.Id);
+                    var update = Builders<Mongo.Entities.Task>.Update.Set(n => n.IsBaseline, false);
+                    await _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndUpdateAsync(filter, update);
+                }
+            }
+            else
+            {
+                var filter = Builders<Mongo.Entities.Task>.Filter.Where(a => a.Id == new ObjectId(id));
+                var update = Builders<Mongo.Entities.Task>.Update.Set(n => n.IsBaseline, true);
+                await _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndUpdateAsync(filter, update);
+            }
+
+            return Ok();
+        }
+
         private List<TaskReportItem> GenerateReport(Mongo.Entities.Task baseline, Mongo.Entities.Task previous, Mongo.Entities.Task current)
         {
             var items = new List<TaskReportItem>();
