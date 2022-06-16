@@ -60,6 +60,8 @@ namespace WebApi.HostedServices
 
             _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndReplace(n => n.Id == task.Id, task);
 
+            var processId = StartHtop();
+
             try
             {
                 var script = GenerateScript(task);
@@ -73,12 +75,13 @@ namespace WebApi.HostedServices
                 var command = $"wrk -t {task.Thread} -c {task.Connection} -s {script} -d {task.Duration}{task.Unit} --latency {task.Url}";
                 task.Command = command;
 
-                var (code, message) = ExecuteCommand(command);
+                var (code, message, _) = ExecuteCommand(command);
 
                 if (code != 0)
                 {
                     task.Status = Mongo.Entities.TaskStatus.Error;
                     task.Message = "[Error]" + message;
+                    _logger.LogError(message);
                 }
                 else
                 {
@@ -91,10 +94,57 @@ namespace WebApi.HostedServices
             {
                 task.Status = Mongo.Entities.TaskStatus.Error;
                 task.Message = "[Exception]" + ex.Message;
+                _logger.LogError(ex.Message);
             }
+
+            KillHtop(processId);
 
             task.EndRunningTime = DateTime.UtcNow;
             _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndReplace(n => n.Id == task.Id, task);
+        }
+
+        private int StartHtop()
+        {
+            try
+            {
+                var (code, message, processId) = ExecuteCommand("shellinaboxd -t -b -p 8080 --no-beep -s '/:nobody:nogroup:/:htop -d 10'");
+                if (code != 0)
+                {
+                    _logger.LogError(message);
+                    return 0;
+                }
+                else
+                {
+                    _logger.LogInformation($"Htop processId: {processId}");
+                    return processId;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return 0;
+            }
+        }
+
+        private void KillHtop(int processId)
+        {
+            if (processId == 0)
+            {
+                return;
+            }
+
+            try
+            {
+                var (code, message, _) = ExecuteCommand("shellinaboxd -t -b -p 8080 --no-beep -s '/:nobody:nogroup:/:htop -d 10'");
+                if (code != 0)
+                {
+                    _logger.LogError(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
         }
 
         private int GetTotalMem()
@@ -129,7 +179,7 @@ namespace WebApi.HostedServices
         {
             try
             {
-                var (code, message) = ExecuteCommand(command);
+                var (code, message, _) = ExecuteCommand(command);
 
                 if (code == 0)
                 {
@@ -166,7 +216,7 @@ namespace WebApi.HostedServices
             return scriptPath;
         }
 
-        private static (int, string) ExecuteCommand(string command)
+        private static (int, string, int) ExecuteCommand(string command)
         {
             var escapedArgs = command.Replace("\"", "\\\"");
             var process = new Process
@@ -191,7 +241,7 @@ namespace WebApi.HostedServices
                 message = process.StandardError.ReadToEnd();
             }
 
-            return (process.ExitCode, message);
+            return (process.ExitCode, message, process.Id);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

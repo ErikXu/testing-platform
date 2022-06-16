@@ -71,6 +71,16 @@
           <span>{{ scope.row.creationTime | simpleFormat }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="Monitor" align="center" width="90">
+        <template slot-scope="{row}">
+          <el-button v-if="row.status === 1" type="success" size="mini" @click="monitor(row)">
+            View
+          </el-button>
+          <el-button v-else type="success" size="mini" disabled>
+            View
+          </el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="Report" align="center" width="90">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="report(row)">
@@ -107,6 +117,10 @@ export default {
     },
     report(row) {
       this.$router.push({ name: 'task-report', params: { id: row.id }})
+    },
+    monitor(row) {
+      var url = window.location.protocol + '//' + window.location.hostname + ':8080/?id=' + row.id
+      window.open(url)
     }
   }
 }
