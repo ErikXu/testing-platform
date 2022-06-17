@@ -3,6 +3,8 @@ FROM alpine:3.14
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 RUN apk update
+
+# .Net dependency
 RUN apk add --no-cache \
         ca-certificates \
         krb5-libs \
@@ -13,6 +15,11 @@ RUN apk add --no-cache \
         zlib \
         tini
 
+# Api test tool newman
+RUN apk add nodejs npm
+RUN npm install --global newman@5.3.1
+
+# Stress test tool wrk
 RUN apk add wrk
 RUN apk add htop
 

@@ -31,7 +31,7 @@ namespace WebApi.HostedServices
         {
             _logger.LogInformation("[Run stress test hosted service] is running...");
 
-            _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
+            _timer = new Timer(DoWork, null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
 
             return Task.CompletedTask;
         }

@@ -52,6 +52,7 @@ namespace WebApi
             services.AddSpaStaticFiles(options => options.RootPath = "web");
 
             services.AddHostedService<RunStressTest>();
+            services.AddHostedService<RunApiTest>();
 
             services.AddSingleton<IParseService, ParseService>();
         }
