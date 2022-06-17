@@ -10,7 +10,8 @@ RUN apk add --no-cache \
         libintl \
         libssl1.1 \
         libstdc++ \
-        zlib
+        zlib \
+        tini
 
 RUN apk add wrk
 RUN apk add htop
@@ -22,4 +23,5 @@ COPY . /app
 WORKDIR /app
 EXPOSE 80
 
-ENTRYPOINT ["/app/webapi", "--urls=http://*:80"]
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD ["/app/webapi", "--urls=http://*:80"]
