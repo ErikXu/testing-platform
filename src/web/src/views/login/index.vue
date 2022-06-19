@@ -1,9 +1,10 @@
 <template>
   <div class="login-container">
+    <Header />
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">{{ $t('Test platform') }}</h3>
       </div>
 
       <el-form-item prop="username">
@@ -13,7 +14,7 @@
         <el-input
           ref="username"
           v-model="loginForm.username"
-          placeholder="Username"
+          :placeholder="$t('Username')"
           name="username"
           type="text"
           tabindex="1"
@@ -30,7 +31,7 @@
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password"
+          :placeholder="$t('Password')"
           name="password"
           tabindex="2"
           auto-complete="on"
@@ -41,11 +42,11 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">{{ $t('Login') }}</el-button>
 
       <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: any</span>
+        <span style="margin-right:20px;">{{ $t('username:') }}admin</span>
+        <span> {{ $t('password:') }} {{ $t('any') }}</span>
       </div>
 
     </el-form>
@@ -54,20 +55,24 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
+import Header from '@/components/Header/index.vue'
 
 export default {
   name: 'Login',
+  components: {
+    Header
+  },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error(this.$t('Please enter the correct user name')))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error(this.$t('The password can not be less than 6 digits')))
       } else {
         callback()
       }
@@ -235,3 +240,28 @@ $light_gray:#eee;
   }
 }
 </style>
+
+<i18n>
+{
+  "en": {
+    "Test platform": "Test platform",
+    "Username": "UserName",
+    "Password": "Password",
+    "username:": "username:",
+    "password:": "password:",
+    "any": "any",
+    "Please enter the correct user name": "Please enter the correct user name",
+    "The password can not be less than 6 digits": "The password can not be less than 6 digits"
+  },
+  "zh": {
+    "Test platform": "测试平台",
+    "Username": "用户名",
+    "Password": "密码",
+    "username:": "用户名：",
+    "password:": "密码：",
+    "any": "任意",
+    "Please enter the correct user name": "请输入正确的用户名",
+    "The password can not be less than 6 digits": "密码长度最少需要6位"
+  }
+}
+</i18n>
