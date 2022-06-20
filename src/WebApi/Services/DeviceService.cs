@@ -66,7 +66,9 @@
 
         public string GetCpuModel()
         {
-            return GetDevice("cat /proc/cpuinfo | grep -m1 'model name' | awk -F':' '{print $2}'");
+            var result = GetDevice("cat /proc/cpuinfo | grep -m1 'model name' | awk -F':' '{print $2}'");
+
+            return result?.Trim();
         }
 
         public double GetCpuFrequency()
