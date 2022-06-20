@@ -19,12 +19,20 @@ namespace WebApi.HostedServices
         private readonly ILogger<RunStressTest> _logger;
         private readonly MongoDbContext _mongoDbContext;
         private readonly IParseService _parseService;
+        private readonly ICommandService _commandService;
+        private readonly IDeviceService _deviceService;
 
-        public RunStressTest(ILogger<RunStressTest> logger, MongoDbContext mongoDbContext, IParseService parseService)
+        public RunStressTest(ILogger<RunStressTest> logger, 
+                             MongoDbContext mongoDbContext, 
+                             IParseService parseService,
+                             ICommandService commandService,
+                             IDeviceService deviceService)
         {
             _logger = logger;
             _mongoDbContext = mongoDbContext;
             _parseService = parseService;
+            _commandService = commandService;
+            _deviceService = deviceService;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -68,14 +76,14 @@ namespace WebApi.HostedServices
 
                 task.Device = new Mongo.Entities.Device
                 {
-                    TotalMem = GetTotalMem(),
-                    AvailableMem = GetAvailableMem()
+                    TotalMem = _deviceService.GetTotalMem(),
+                    AvailableMem = _deviceService.GetAvailableMem()
                 };
 
                 var command = $"wrk -t {task.Thread} -c {task.Connection} -s {script} -d {task.Duration}{task.Unit} --latency {task.Url}";
                 task.Command = command;
 
-                var (code, message) = ExecuteCommand(command);
+                var (code, message) = _commandService.ExecuteCommand(command);
 
                 if (code != 0)
                 {
@@ -107,7 +115,7 @@ namespace WebApi.HostedServices
         {
             try
             {
-                var (code, message) = ExecuteBackgroundCommand("shellinaboxd -t -b -p 8080 --no-beep -s '/:nobody:nogroup:/:htop -d 10'");
+                var (code, message) = _commandService.ExecuteBackgroundCommand("shellinaboxd -t -b -p 8080 --no-beep -s '/:nobody:nogroup:/:htop -d 10'");
                 if (code != 0)
                 {
                     _logger.LogError(message);
@@ -123,7 +131,7 @@ namespace WebApi.HostedServices
         {
             try
             {
-                var (code, message) = ExecuteCommand("pgrep -f shellinaboxd -o");
+                var (code, message) = _commandService.ExecuteCommand("pgrep -f shellinaboxd -o");
                 if (code != 0)
                 {
                     _logger.LogError(message);
@@ -139,7 +147,7 @@ namespace WebApi.HostedServices
                 var processId = message.Trim();
                 _logger.LogInformation($"Process Id of [shellinaboxd] is {processId}!");
 
-                (code, message) = ExecuteCommand($"kill -9 {processId}");
+                (code, message) = _commandService.ExecuteCommand($"kill -9 {processId}");
                 if (code != 0)
                 {
                     _logger.LogError(message);
@@ -148,55 +156,6 @@ namespace WebApi.HostedServices
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-            }
-        }
-
-        private int GetTotalMem()
-        {
-            var result = GetDevice("cat /proc/meminfo | grep 'MemTotal' | awk -F':' '{print $2}'");
-
-            if (result == null)
-            {
-                return 0;
-            }
-
-            var value = result.ToLower().Replace("kb", string.Empty).Trim();
-
-            return int.Parse(value) / 1024;
-        }
-
-        private int GetAvailableMem()
-        {
-            var result = GetDevice("cat /proc/meminfo | grep 'MemFree' | awk -F':' '{print $2}'");
-
-            if (result == null)
-            {
-                return 0;
-            }
-
-            var value = result.ToLower().Replace("kb", string.Empty).Trim();
-
-            return int.Parse(value) / 1024;
-        }
-
-        private string GetDevice(string command)
-        {
-            try
-            {
-                var (code, message) = ExecuteCommand(command);
-
-                if (code == 0)
-                {
-                    return message;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch
-            {
-                return null;
             }
         }
 
@@ -218,63 +177,6 @@ namespace WebApi.HostedServices
             File.WriteAllText(scriptPath, task.Script);
 
             return scriptPath;
-        }
-
-        private static (int, string) ExecuteCommand(string command)
-        {
-            var escapedArgs = command.Replace("\"", "\\\"");
-            var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "/bin/sh",
-                    Arguments = $"-c \"{escapedArgs}\"",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
-            };
-
-            process.Start();
-            process.WaitForExit();
-
-            var message = process.StandardOutput.ReadToEnd();
-            if (process.ExitCode != 0)
-            {
-                message = process.StandardError.ReadToEnd();
-            }
-
-            return (process.ExitCode, message);
-        }
-
-        private static (int, string) ExecuteBackgroundCommand(string command)
-        {
-            var escapedArgs = command.Replace("\"", "\\\"");
-
-            var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "/bin/sh",
-                    Arguments = $"-c \"{escapedArgs}\"",
-                    RedirectStandardOutput = false,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
-            };
-
-            process.Start();
-            process.WaitForExit();
-
-            var message = string.Empty;
-            if (process.ExitCode != 0)
-            {
-                message = process.StandardError.ReadToEnd();
-            }
-
-            return (process.ExitCode, message);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

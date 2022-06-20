@@ -1,21 +1,15 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson;
-using MongoDB.Integrations.JsonDotNet.Converters;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using WebApi.HostedServices;
 using WebApi.Mongo;
 using WebApi.Services;
@@ -55,6 +49,8 @@ namespace WebApi
             services.AddHostedService<RunApiTest>();
 
             services.AddSingleton<IParseService, ParseService>();
+            services.AddSingleton<ICommandService, CommandService>();
+            services.AddSingleton<IDeviceService, DeviceService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
