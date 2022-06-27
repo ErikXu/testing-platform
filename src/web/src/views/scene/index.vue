@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-button size="mini" type="primary" @click="create">Create</el-button>
+    <el-button size="mini" type="primary" @click="create">{{ $t('Create') }}</el-button>
     <el-table
       :data="list"
       border
@@ -13,59 +13,59 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="Name" align="left" width="140">
+      <el-table-column :label="$t('Name')" align="left" width="140">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Url" align="left">
+      <el-table-column :label="$t('Url')" align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.url }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Method" align="center" width="80">
+      <el-table-column :label="$t('Method')" align="center" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.method }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Body" align="center" width="80">
+      <el-table-column :label="$t('Body')" align="center" width="80">
         <template>
           <span>Body</span>
         </template>
       </el-table-column>
-      <el-table-column label="Thread" align="center" width="80">
+      <el-table-column :label="$t('Thread')" align="center" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.thread }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Connection" align="center" width="100">
+      <el-table-column :label="$t('Connection')" align="center" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.connection }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Duration" align="center" width="80">
+      <el-table-column :label="$t('Duration')" align="center" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.duration + scope.row.unit }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Operation" align="center" width="150">
+      <el-table-column :label="$t('Operation')" align="center" width="150">
         <template slot-scope="{row}">
           <el-button type="success" size="mini" @click="run(row)">
-            Run
+            {{ $t('Run') }}
           </el-button>
           <el-button type="primary" size="mini" @click="detail(row)">
-            Detail
+            {{ $t('Detail') }}
           </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <el-dialog title="Scene" :visible.sync="formVisible" @close="reset">
+    <el-dialog :title="$t('Scene')" :visible.sync="formVisible" @close="reset">
       <el-form ref="sceneForm" :model="form" label-position="left" label-width="100px" style="width: 600px;" :rules="rules">
-        <el-form-item label="Name" prop="name">
+        <el-form-item :label="$t('Name')" prop="name">
           <el-input v-model="form.name" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="Url" prop="url">
+        <el-form-item :label="$t('Url')" prop="url">
           <el-col :span="5">
             <el-select v-model="form.method">
               <el-option
@@ -80,16 +80,16 @@
             <el-input v-model="form.url" autocomplete="off" />
           </el-col>
         </el-form-item>
-        <el-form-item label="Thread" style="width:180px;">
+        <el-form-item :label="$t('Thread')" style="width:180px;">
           <el-input-number v-model="form.thread" :min="1" />
         </el-form-item>
-        <el-form-item label="Connection" style="width:180px;">
+        <el-form-item :label="$t('Connection')" style="width:180px;">
           <el-input-number v-model="form.connection" :min="1" />
         </el-form-item>
-        <el-form-item label="Duration" style="width:180px;">
+        <el-form-item :label="$t('Duration')" style="width:180px;">
           <el-input-number v-model="form.duration" :min="1" />
         </el-form-item>
-        <el-form-item label="Unit">
+        <el-form-item :label="$t('Unit')">
           <el-select v-model="form.unit" style="width:180px;">
             <el-option
               v-for="unit in unitList"
@@ -101,8 +101,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="reset">Reset</el-button>
-        <el-button type="primary" :disabled="submiting" :loading="submiting" @click.native.prevent="submit">Submit</el-button>
+        <el-button @click="reset">{{ $t('Reset') }}</el-button>
+        <el-button type="primary" :disabled="submiting" :loading="submiting" @click.native.prevent="submit">{{ $t('Submit') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -192,3 +192,42 @@ export default {
   }
 }
 </script>
+
+<i18n>
+{
+  "en": {
+    "Create": "Create",
+    "Name": "Name",
+    "Url": "Url",
+    "Method": "Method",
+    "Body": "Body",
+    "Thread": "Thread",
+    "Connection": "Connection",
+    "Duration": "Duration",
+    "Operation": "Operation",
+    "Run": "Run",
+    "Detail": "Detail",
+    "Scene": "Scene",
+    "Unit": "Unit",
+    "Submit": "Submit",
+    "Reset": "Reset"
+  },
+  "zh": {
+    "Create": "创建",
+    "Name": "名称",
+    "Url": "Url",
+    "Method": "Method",
+    "Body": "Body",
+    "Thread": "线程数",
+    "Connection": "连接数",
+    "Duration": "持续时间",
+    "Operation": "操作",
+    "Run": "运行",
+    "Detail": "详情",
+    "Scene": "场景",
+    "Unit": "单位",
+    "Submit": "提交",
+    "Reset": "重置"
+  }
+}
+</i18n>

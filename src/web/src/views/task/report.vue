@@ -6,22 +6,22 @@
       fit
       highlight-current-row
     >
-      <el-table-column label="Item" align="left" width="140">
+      <el-table-column :label="$t('Item')" align="left" width="140">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Current" align="left">
+      <el-table-column :label="$t('Current')" align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.current }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Previous" align="left">
+      <el-table-column :label="$t('Previous')" align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.previous }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Baseline" align="left">
+      <el-table-column :label="$t('Baseline')" align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.baseline }}</span>
         </template>
@@ -52,3 +52,20 @@ export default {
   }
 }
 </script>
+
+<i18n>
+{
+  "en": {
+    "Item": "Item",
+    "Current": "Current",
+    "Previous": "Previous",
+    "Baseline": "Baseline"
+  },
+  "zh": {
+    "Item": "项目",
+    "Current": "当前结果",
+    "Previous": "上次结果",
+    "Baseline": "基线结果"
+  }
+}
+</i18n>

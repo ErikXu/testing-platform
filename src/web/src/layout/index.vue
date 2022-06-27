@@ -23,7 +23,7 @@ export default {
     Navbar,
     Sidebar,
     AppMain,
-    Header,
+    Header
   },
   mixins: [ResizeMixin],
   computed: {

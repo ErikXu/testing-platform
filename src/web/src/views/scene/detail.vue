@@ -1,32 +1,32 @@
 <template>
   <div class="app-container">
-    <h3>Scene Details</h3>
+    <h3>{{ $t('Scene Details') }}</h3>
     <el-card class="box-card">
       <el-form label-width="40%" size="mini">
-        <el-form-item label="Id:">
+        <el-form-item :label="$t('Id')">
           <span>{{ detail && detail.id }}</span>
         </el-form-item>
-        <el-form-item label="Name:">
+        <el-form-item :label="$t('Name')">
           <span>{{ detail && detail.name }}</span>
         </el-form-item>
-        <el-form-item label="Url:">
+        <el-form-item :label="$t('Url')">
           <span>{{ detail && detail.url }}</span>
         </el-form-item>
-        <el-form-item label="Method:">
+        <el-form-item :label="$t('Method')">
           <span>{{ detail && detail.method }}</span>
         </el-form-item>
-        <el-form-item label="Thread:">
+        <el-form-item :label="$t('Thread')">
           <span>{{ detail && detail.thread }}</span>
         </el-form-item>
-        <el-form-item label="Connection:">
+        <el-form-item :label="$t('Connection')">
           <span>{{ detail && detail.connection }}</span>
         </el-form-item>
-        <el-form-item label="Duration:">
+        <el-form-item :label="$t('Duration')">
           <span>{{ detail && (detail.duration + detail.unit) }}</span>
         </el-form-item>
       </el-form>
     </el-card>
-    <h3>Task List</h3>
+    <h3>{{ $t('Task List') }}</h3>
     <el-table
       :data="tasks"
       border
@@ -38,53 +38,53 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="ID" align="left" width="220">
+      <el-table-column :label="$t('ID')" align="left" width="220">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Status" align="center" width="80">
+      <el-table-column :label="$t('Status')" align="center" width="80">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.status === 0" type="info" size="small">Waiting</el-tag>
-          <el-tag v-else-if="scope.row.status === 1" type="primary" size="small">Runing</el-tag>
-          <el-tag v-else-if="scope.row.status === 2" type="success" size="small">Done</el-tag>
-          <el-tag v-else-if="scope.row.status === 3" type="danger" size="small">Error</el-tag>
+          <el-tag v-if="scope.row.status === 0" type="info" size="small">{{ $t('Waiting') }}</el-tag>
+          <el-tag v-else-if="scope.row.status === 1" type="primary" size="small">{{ $t('Runing') }}</el-tag>
+          <el-tag v-else-if="scope.row.status === 2" type="success" size="small">{{ $t('Done') }}</el-tag>
+          <el-tag v-else-if="scope.row.status === 3" type="danger" size="small">{{ $t('Error') }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="IsBaseline" align="left" width="100">
+      <el-table-column :label="$t('IsBaseline')" align="left" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.isBaseline }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="StartTime" align="left">
+      <el-table-column :label="$t('StartTime')" align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.startRunningTime | simpleFormat }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="EndTime" align="left">
+      <el-table-column :label="$t('EndTime')" align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.endRunningTime | simpleFormat }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="CreationTime" align="left">
+      <el-table-column :label="$t('CreationTime')" align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.creationTime | simpleFormat }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Monitor" align="center" width="90">
+      <el-table-column :label="$t('Monitor')" align="center" width="90">
         <template slot-scope="{row}">
           <el-button v-if="row.status === 1" type="success" size="mini" @click="monitor(row)">
-            View
+            {{ $t('View') }}
           </el-button>
           <el-button v-else type="success" size="mini" disabled>
-            View
+            {{ $t('View') }}
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="Report" align="center" width="90">
+      <el-table-column :label="$t('Report')" align="center" width="90">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="report(row)">
-            View
+            {{ $t('View') }}
           </el-button>
         </template>
       </el-table-column>
@@ -125,3 +125,56 @@ export default {
   }
 }
 </script>
+
+<i18n>
+{
+  "en": {
+    "Scene Details": "Scene Details",
+    "Id": "Id:",
+    "Name": "Name:",
+    "Url": "Url:",
+    "Method": "Method:",
+    "Thread": "Thread:",
+    "Connection": "Connection:",
+    "Duration": "Duration:",
+    "Task List": "Task List",
+    "ID": "ID",
+    "Status": "Status",
+    "IsBaseline": "IsBaseline",
+    "StartTime": "StartTime",
+    "EndTime": "EndTime",
+    "CreationTime": "CreationTime",
+    "Monitor": "Monitor",
+    "Report": "Report",
+    "View": "View",
+    "Waiting": "Waiting",
+    "Runing": "Runing",
+    "Done": "Done",
+    "Error": "Error"
+  },
+  "zh": {
+    "Scene Details": "场景详情",
+    "Id": "Id:",
+    "Name": "名称:",
+    "Url": "Url:",
+    "Method": "Method:",
+    "Thread": "线程数:",
+    "Connection": "连接数:",
+    "Duration": "持续时间:",
+    "Task List": "任务列表",
+    "ID": "ID",
+    "Status": "状态",
+    "IsBaseline": "基线版本",
+    "StartTime": "开始时间",
+    "EndTime": "结束时间",
+    "CreationTime": "创建时间",
+    "Monitor": "监控",
+    "Report": "报告",
+    "View": "查看",
+    "Waiting": "等待中",
+    "Runing": "运行中",
+    "Done": "已完成",
+    "Error": "出错"
+  }
+}
+</i18n>
