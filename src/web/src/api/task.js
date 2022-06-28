@@ -14,6 +14,13 @@ export function getReportOfTask(id) {
   })
 }
 
+export function getSceneOfTask(id) {
+  return request({
+    url: `/api/tasks/${id}/scene`,
+    method: 'get'
+  })
+}
+
 export function addTask(sceneId) {
   return request({
     url: `/api/tasks?sceneId=${sceneId}`,

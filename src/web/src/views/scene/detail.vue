@@ -174,7 +174,7 @@ export default {
     "Waiting": "等待中",
     "Runing": "运行中",
     "Done": "已完成",
-    "Error": "出错"
+    "Error": "已失败"
   }
 }
 </i18n>

@@ -85,6 +85,7 @@ namespace WebApi.Controllers
             {
                 return NotFound();
             }
+
             return Ok(scene);
         }
 

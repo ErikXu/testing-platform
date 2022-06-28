@@ -11,10 +11,14 @@ namespace WebApi.Models
     {
         public string Name { get; set; }
 
-        public double? Baseline { get; set; }
+        public string Baseline { get; set; }
 
-        public double? Previous { get; set; }
+        public string Previous { get; set; }
 
-        public double? Current { get; set; }
+        public string Current { get; set; }
+
+        public int PreviousToCurrent { get; set; }
+
+        public int BaselineToCurrent { get; set; }
     }
 }
