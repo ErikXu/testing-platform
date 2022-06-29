@@ -56,38 +56,33 @@ export const constantRoutes = [
   },
 
   {
-    path: '/scene',
+    path: '/stress',
     component: Layout,
+    name: 'stress',
+    meta: { title: 'Stress Test', icon: 'el-icon-folder' },
     children: [
       {
-        path: 'index',
+        path: '/stress/scene',
         name: 'scene',
-        component: () => import('@/views/scene/index'),
-        meta: { title: 'Scene', icon: 'el-icon-folder' }
+        component: () => import('@/views/stress/scene/index'),
+        meta: { title: 'Scene', icon: 'el-icon-s-grid' }
       },
       {
-        path: ':id',
+        path: '/stress/scene/:id',
         name: 'scene-detail',
-        component: () => import('@/views/scene/detail'),
+        component: () => import('@/views/stress/scene/detail'),
         hidden: true
-      }
-    ]
-  },
-
-  {
-    path: '/task',
-    component: Layout,
-    children: [
+      },
       {
-        path: 'index',
+        path: '/stress/task',
         name: 'task',
-        component: () => import('@/views/task/index'),
+        component: () => import('@/views/stress/task/index'),
         meta: { title: 'Task', icon: 'el-icon-document' }
       },
       {
-        path: ':id/report',
+        path: '/stress/task/:id/report',
         name: 'task-report',
-        component: () => import('@/views/task/report'),
+        component: () => import('@/views/stress/task/report'),
         hidden: true
       }
     ]
