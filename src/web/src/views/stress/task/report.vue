@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { getSceneOfTask, getReportOfTask } from '@/api/task'
+import { getSceneOfTask, getReportOfTask } from '@/api/stress-task'
 
 export default {
   data() {

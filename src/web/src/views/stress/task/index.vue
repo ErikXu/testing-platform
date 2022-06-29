@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { getTaskList } from '@/api/task'
+import { getTaskList } from '@/api/stress-task'
 
 export default {
   name: 'Task',

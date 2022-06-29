@@ -2,42 +2,42 @@ import request from '@/utils/request'
 
 export function getMethodList() {
   return request({
-    url: '/api/scenes/method',
+    url: '/api/stress-scenes/method',
     method: 'get'
   })
 }
 
 export function getUnitList() {
   return request({
-    url: '/api/scenes/unit',
+    url: '/api/stress-scenes/unit',
     method: 'get'
   })
 }
 
 export function getSceneList() {
   return request({
-    url: '/api/scenes',
+    url: '/api/stress-scenes',
     method: 'get'
   })
 }
 
 export function getScene(id) {
   return request({
-    url: `/api/scenes/${id}`,
+    url: `/api/stress-scenes/${id}`,
     method: 'get'
   })
 }
 
 export function getTaskOfScene(id) {
   return request({
-    url: `/api/scenes/${id}/tasks`,
+    url: `/api/stress-scenes/${id}/tasks`,
     method: 'get'
   })
 }
 
 export function addScene(form) {
   return request({
-    url: '/api/scenes',
+    url: '/api/stress-scenes',
     method: 'post',
     data: form
   })

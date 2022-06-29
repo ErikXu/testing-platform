@@ -2,7 +2,7 @@
 
 namespace WebApi.Mongo.Entities
 {
-    public class Scene : Entity
+    public class StressScene : Entity
     {
         public string Name { get; set; }
 

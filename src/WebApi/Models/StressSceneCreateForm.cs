@@ -2,7 +2,7 @@
 
 namespace WebApi.Models
 {
-    public class SceneCreateForm
+    public class StressSceneCreateForm
     {
         [Required]
         public string Name { get; set; }

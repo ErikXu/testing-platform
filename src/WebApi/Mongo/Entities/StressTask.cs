@@ -3,7 +3,7 @@ using System;
 
 namespace WebApi.Mongo.Entities
 {
-    public class Task : Entity
+    public class StressTask : Entity
     {
         public ObjectId SceneId { get; set; }
 
@@ -21,7 +21,7 @@ namespace WebApi.Mongo.Entities
 
         public string Unit { get; set; }
 
-        public TaskStatus Status { get; set; }
+        public StressTaskStatus Status { get; set; }
 
         public Device Device { get; set; }
 
@@ -42,7 +42,7 @@ namespace WebApi.Mongo.Entities
         public DateTime CreationTime { get; set; }
     }
 
-    public enum TaskStatus
+    public enum StressTaskStatus
     {
         Queue = 0,
 

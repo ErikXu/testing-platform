@@ -12,9 +12,9 @@ using WebApi.Mongo.Entities;
 
 namespace WebApi.Controllers
 {
-    [Route("api/scenes")]
+    [Route("api/stress-scenes")]
     [ApiController]
-    public class ScenesController : ControllerBase
+    public class StressScenesController : ControllerBase
     {
         private readonly MongoDbContext _mongoDbContext;
         private readonly IMapper _mapper;
@@ -35,7 +35,7 @@ namespace WebApi.Controllers
             { "h", "Hour" }
         };
 
-        public ScenesController(MongoDbContext mongoDbContext, IMapper mapper)
+        public StressScenesController(MongoDbContext mongoDbContext, IMapper mapper)
         {
             _mongoDbContext = mongoDbContext;
             _mapper = mapper;
@@ -67,9 +67,9 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> List()
         {
-            var list = await _mongoDbContext.Collection<Scene>()
+            var list = await _mongoDbContext.Collection<StressScene>()
                                             .Find(new BsonDocument())
-                                            .Sort(Builders<Scene>.Sort.Ascending(n => n.CreationTime))
+                                            .Sort(Builders<StressScene>.Sort.Ascending(n => n.CreationTime))
                                             .ToListAsync();
             return Ok(list);
         }
@@ -80,7 +80,7 @@ namespace WebApi.Controllers
         [HttpGet("{id}", Name = "GetScene")]
         public async Task<IActionResult> Get([FromRoute] string id)
         {
-            var scene = await _mongoDbContext.Collection<Scene>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
+            var scene = await _mongoDbContext.Collection<StressScene>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
             if (scene == null)
             {
                 return NotFound();
@@ -95,9 +95,9 @@ namespace WebApi.Controllers
         [HttpGet("{id}/tasks")]
         public async Task<IActionResult> ListByScene([FromRoute] string id)
         {
-            var list = await _mongoDbContext.Collection<Mongo.Entities.Task>()
+            var list = await _mongoDbContext.Collection<StressTask>()
                                             .Find(n => n.SceneId == new ObjectId(id))
-                                            .Sort(Builders<Mongo.Entities.Task>.Sort.Descending(n => n.CreationTime))
+                                            .Sort(Builders<StressTask>.Sort.Descending(n => n.CreationTime))
                                             .ToListAsync();
             return Ok(list);
         }
@@ -106,11 +106,11 @@ namespace WebApi.Controllers
         /// Create scene
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] SceneCreateForm form)
+        public async Task<IActionResult> Create([FromBody] StressSceneCreateForm form)
         {
-            var scene = _mapper.Map<Scene>(form);
+            var scene = _mapper.Map<StressScene>(form);
             scene.CreationTime = DateTime.UtcNow;
-            await _mongoDbContext.Collection<Scene>().InsertOneAsync(scene);
+            await _mongoDbContext.Collection<StressScene>().InsertOneAsync(scene);
 
             return CreatedAtRoute("GetScene", new { id = scene.Id.ToString() }, scene);
         }

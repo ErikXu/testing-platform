@@ -8,6 +8,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApi.Mongo;
+using WebApi.Mongo.Entities;
 
 namespace WebApi.HostedServices
 {
@@ -35,8 +36,8 @@ namespace WebApi.HostedServices
 
         private void DoWork(object state)
         {
-            var isRunning = _mongoDbContext.Collection<Mongo.Entities.ApiTask>()
-                               .Find(n => n.Status == Mongo.Entities.ApiTaskStatus.Running)
+            var isRunning = _mongoDbContext.Collection<ApiTask>()
+                               .Find(n => n.Status == ApiTaskStatus.Running)
                                .Any();
 
             if (isRunning)
@@ -44,8 +45,8 @@ namespace WebApi.HostedServices
                 return;
             }
 
-            var apiTask = _mongoDbContext.Collection<Mongo.Entities.ApiTask>()
-                                     .Find(n => n.Status == Mongo.Entities.ApiTaskStatus.Queue && n.Collection != null)
+            var apiTask = _mongoDbContext.Collection<ApiTask>()
+                                     .Find(n => n.Status == ApiTaskStatus.Queue && n.Collection != null)
                                      .SortBy(n => n.CreationTime)
                                      .FirstOrDefault();
 
@@ -54,9 +55,9 @@ namespace WebApi.HostedServices
                 return;
             }
 
-            apiTask.Status = Mongo.Entities.ApiTaskStatus.Running;
+            apiTask.Status = ApiTaskStatus.Running;
             apiTask.StartRunningTime = DateTime.UtcNow;
-            _mongoDbContext.Collection<Mongo.Entities.ApiTask>().FindOneAndReplace(n => n.Id == apiTask.Id, apiTask);
+            _mongoDbContext.Collection<ApiTask>().FindOneAndReplace(n => n.Id == apiTask.Id, apiTask);
 
             try
             {
@@ -80,27 +81,27 @@ namespace WebApi.HostedServices
 
                 if (code != 0)
                 {
-                    apiTask.Status = Mongo.Entities.ApiTaskStatus.Error;
+                    apiTask.Status = ApiTaskStatus.Error;
                     apiTask.Message = "[Error]" + message;
                     _logger.LogError(message);
                 }
                 else
                 {
                     var resultJson = File.ReadAllText(resultPath);
-                    var result = JsonConvert.DeserializeObject<Mongo.Entities.NewmanResult>(resultJson);
-                    apiTask.Status = Mongo.Entities.ApiTaskStatus.Done;
+                    var result = JsonConvert.DeserializeObject<NewmanResult>(resultJson);
+                    apiTask.Status = ApiTaskStatus.Done;
                     apiTask.Result = result;
                 }
             }
             catch (Exception ex)
             {
-                apiTask.Status = Mongo.Entities.ApiTaskStatus.Error;
+                apiTask.Status = ApiTaskStatus.Error;
                 apiTask.Message = "[Exception]" + ex.Message;
                 _logger.LogError(ex.Message);
             }
 
             apiTask.EndRunningTime = DateTime.UtcNow;
-            _mongoDbContext.Collection<Mongo.Entities.ApiTask>().FindOneAndReplace(n => n.Id == apiTask.Id, apiTask);
+            _mongoDbContext.Collection<ApiTask>().FindOneAndReplace(n => n.Id == apiTask.Id, apiTask);
         }
 
         private static (int, string) ExecuteCommand(string command)

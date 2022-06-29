@@ -109,8 +109,8 @@
 </template>
 
 <script>
-import { getMethodList, getUnitList, getSceneList, addScene } from '@/api/scene'
-import { addTask } from '@/api/task'
+import { getMethodList, getUnitList, getSceneList, addScene } from '@/api/stress-scene'
+import { addTask } from '@/api/stress-task'
 
 export default {
   name: 'Scene',

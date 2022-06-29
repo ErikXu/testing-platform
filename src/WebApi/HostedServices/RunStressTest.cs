@@ -2,13 +2,13 @@
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApi.Mongo;
 using WebApi.Services;
+using WebApi.Mongo.Entities;
 
 namespace WebApi.HostedServices
 {
@@ -46,8 +46,8 @@ namespace WebApi.HostedServices
 
         private void DoWork(object state)
         {
-            var isRunning = _mongoDbContext.Collection<Mongo.Entities.Task>()
-                                           .Find(n => n.Status == Mongo.Entities.TaskStatus.Running)
+            var isRunning = _mongoDbContext.Collection<StressTask>()
+                                           .Find(n => n.Status == StressTaskStatus.Running)
                                            .Any();
 
             if (isRunning)
@@ -55,18 +55,18 @@ namespace WebApi.HostedServices
                 return;
             }
 
-            var task = _mongoDbContext.Collection<Mongo.Entities.Task>()
-                                      .Find(n => n.Status == Mongo.Entities.TaskStatus.Queue).SortBy(n => n.CreationTime).FirstOrDefault();
+            var task = _mongoDbContext.Collection<StressTask>()
+                                      .Find(n => n.Status == StressTaskStatus.Queue).SortBy(n => n.CreationTime).FirstOrDefault();
 
             if (task == null)
             {
                 return;
             }
 
-            task.Status = Mongo.Entities.TaskStatus.Running;
+            task.Status = StressTaskStatus.Running;
             task.StartRunningTime = DateTime.UtcNow;
 
-            _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndReplace(n => n.Id == task.Id, task);
+            _mongoDbContext.Collection<StressTask>().FindOneAndReplace(n => n.Id == task.Id, task);
 
             StartHtop();
 
@@ -74,7 +74,7 @@ namespace WebApi.HostedServices
             {
                 var script = GenerateScript(task);
 
-                task.Device = new Mongo.Entities.Device
+                task.Device = new Device
                 {
                     TotalMem = _deviceService.GetTotalMem(),
                     AvailableMem = _deviceService.GetAvailableMem()
@@ -87,20 +87,20 @@ namespace WebApi.HostedServices
 
                 if (code != 0)
                 {
-                    task.Status = Mongo.Entities.TaskStatus.Error;
+                    task.Status = StressTaskStatus.Error;
                     task.Message = "[Error]" + message;
                     _logger.LogError(message);
                 }
                 else
                 {
                     var result = _parseService.ParseStressTestResult(message);
-                    task.Status = Mongo.Entities.TaskStatus.Done;
+                    task.Status = StressTaskStatus.Done;
                     task.Result = result;
                 }
             }
             catch (Exception ex)
             {
-                task.Status = Mongo.Entities.TaskStatus.Error;
+                task.Status = StressTaskStatus.Error;
                 task.Message = "[Exception]" + ex.Message;
                 _logger.LogError(ex.Message);
             }
@@ -108,7 +108,7 @@ namespace WebApi.HostedServices
             KillHtop();
 
             task.EndRunningTime = DateTime.UtcNow;
-            _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndReplace(n => n.Id == task.Id, task);
+            _mongoDbContext.Collection<StressTask>().FindOneAndReplace(n => n.Id == task.Id, task);
         }
 
         private void StartHtop()
@@ -159,7 +159,7 @@ namespace WebApi.HostedServices
             }
         }
 
-        private string GenerateScript(Mongo.Entities.Task task)
+        private string GenerateScript(StressTask task)
         {
             var script = new StringBuilder();
             script.AppendLine($"wrk.method = \"{task.Method}\"");

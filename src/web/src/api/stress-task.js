@@ -2,28 +2,28 @@ import request from '@/utils/request'
 
 export function getTaskList() {
   return request({
-    url: '/api/tasks',
+    url: '/api/stress-tasks',
     method: 'get'
   })
 }
 
 export function getReportOfTask(id) {
   return request({
-    url: `/api/tasks/${id}/report`,
+    url: `/api/stress-tasks/${id}/report`,
     method: 'get'
   })
 }
 
 export function getSceneOfTask(id) {
   return request({
-    url: `/api/tasks/${id}/scene`,
+    url: `/api/stress-tasks/${id}/scene`,
     method: 'get'
   })
 }
 
 export function addTask(sceneId) {
   return request({
-    url: `/api/tasks?sceneId=${sceneId}`,
+    url: `/api/stress-tasks?sceneId=${sceneId}`,
     method: 'post'
   })
 }

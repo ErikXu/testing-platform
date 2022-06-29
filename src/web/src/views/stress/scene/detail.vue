@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import { getScene, getTaskOfScene } from '@/api/scene'
+import { getScene, getTaskOfScene } from '@/api/stress-scene'
 
 export default {
   data() {

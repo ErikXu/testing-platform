@@ -11,13 +11,13 @@ using System.Linq;
 
 namespace WebApi.Controllers
 {
-    [Route("api/tasks")]
+    [Route("api/stress-tasks")]
     [ApiController]
-    public class TasksController : ControllerBase
+    public class StressTasksController : ControllerBase
     {
         private readonly MongoDbContext _mongoDbContext;
 
-        public TasksController(MongoDbContext mongoDbContext)
+        public StressTasksController(MongoDbContext mongoDbContext)
         {
             _mongoDbContext = mongoDbContext;
         }
@@ -28,9 +28,9 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> List()
         {
-            var list = await _mongoDbContext.Collection<Mongo.Entities.Task>()
+            var list = await _mongoDbContext.Collection<StressTask>()
                                             .Find(new BsonDocument())
-                                            .Sort(Builders<Mongo.Entities.Task>.Sort.Descending(n => n.CreationTime))
+                                            .Sort(Builders<StressTask>.Sort.Descending(n => n.CreationTime))
                                             .ToListAsync();
             return Ok(list);
         }
@@ -41,7 +41,7 @@ namespace WebApi.Controllers
         [HttpGet("{id}", Name = "GetTask")]
         public async Task<IActionResult> Get([FromRoute] string id)
         {
-            var task = await _mongoDbContext.Collection<Mongo.Entities.Task>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
+            var task = await _mongoDbContext.Collection<StressTask>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
             if (task == null)
             {
                 return NotFound();
@@ -56,13 +56,13 @@ namespace WebApi.Controllers
         [HttpGet("{id}/report")]
         public async Task<IActionResult> GetReport([FromRoute] string id)
         {
-            var task = await _mongoDbContext.Collection<Mongo.Entities.Task>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
+            var task = await _mongoDbContext.Collection<StressTask>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
             if (task == null)
             {
                 return NotFound();
             }
 
-            var tasks = await _mongoDbContext.Collection<Mongo.Entities.Task>().Find(n => n.SceneId == task.SceneId).ToListAsync();
+            var tasks = await _mongoDbContext.Collection<StressTask>().Find(n => n.SceneId == task.SceneId).ToListAsync();
 
             var baseline = tasks.SingleOrDefault(n => n.IsBaseline);
 
@@ -82,13 +82,13 @@ namespace WebApi.Controllers
         [HttpGet("{id}/scene")]
         public async Task<IActionResult> GetScene([FromRoute] string id)
         {
-            var task = await _mongoDbContext.Collection<Mongo.Entities.Task>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
+            var task = await _mongoDbContext.Collection<StressTask>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
             if (task == null)
             {
                 return NotFound();
             }
 
-            var scene = await _mongoDbContext.Collection<Scene>().Find(n => n.Id == task.SceneId).SingleOrDefaultAsync();
+            var scene = await _mongoDbContext.Collection<StressScene>().Find(n => n.Id == task.SceneId).SingleOrDefaultAsync();
             if (scene == null)
             {
                 return NotFound();
@@ -103,7 +103,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromQuery] string sceneId)
         {
-            var scene = await _mongoDbContext.Collection<Scene>()
+            var scene = await _mongoDbContext.Collection<StressScene>()
                                              .Find(n => n.Id == new ObjectId(sceneId))
                                              .SingleOrDefaultAsync();
 
@@ -112,7 +112,7 @@ namespace WebApi.Controllers
                 return NotFound();
             }
 
-            var task = new Mongo.Entities.Task
+            var task = new StressTask
             {
                 SceneId = scene.Id,
                 Url = scene.Url,
@@ -121,11 +121,11 @@ namespace WebApi.Controllers
                 Connection = scene.Connection,
                 Duration = scene.Duration,
                 Unit = scene.Unit,
-                Status = Mongo.Entities.TaskStatus.Queue,
+                Status = StressTaskStatus.Queue,
                 CreationTime = DateTime.UtcNow
             };
 
-            await _mongoDbContext.Collection<Mongo.Entities.Task>().InsertOneAsync(task);
+            await _mongoDbContext.Collection<StressTask>().InsertOneAsync(task);
 
             return CreatedAtRoute("GetTask", new { id = task.Id.ToString() }, task);
         }
@@ -133,18 +133,18 @@ namespace WebApi.Controllers
         [HttpPatch("{id}/baseline")]
         public async Task<IActionResult> SetAsBaseline([FromRoute] string id)
         {
-            var task = await _mongoDbContext.Collection<Mongo.Entities.Task>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
+            var task = await _mongoDbContext.Collection<StressTask>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
             if (task == null)
             {
                 return NotFound();
             }
 
-            if (task.Status != Mongo.Entities.TaskStatus.Done)
+            if (task.Status != StressTaskStatus.Done)
             {
                 return BadRequest("This task is not finished!");
             }
 
-            var baseline = await _mongoDbContext.Collection<Mongo.Entities.Task>().Find(n => n.SceneId == task.SceneId && n.IsBaseline).SingleOrDefaultAsync();
+            var baseline = await _mongoDbContext.Collection<StressTask>().Find(n => n.SceneId == task.SceneId && n.IsBaseline).SingleOrDefaultAsync();
 
             if (baseline != null)
             {
@@ -154,22 +154,22 @@ namespace WebApi.Controllers
                 }
                 else
                 {
-                    var filter = Builders<Mongo.Entities.Task>.Filter.Where(a => a.Id == baseline.Id);
-                    var update = Builders<Mongo.Entities.Task>.Update.Set(n => n.IsBaseline, false);
-                    await _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndUpdateAsync(filter, update);
+                    var filter = Builders<StressTask>.Filter.Where(a => a.Id == baseline.Id);
+                    var update = Builders<StressTask>.Update.Set(n => n.IsBaseline, false);
+                    await _mongoDbContext.Collection<StressTask>().FindOneAndUpdateAsync(filter, update);
                 }
             }
             else
             {
-                var filter = Builders<Mongo.Entities.Task>.Filter.Where(a => a.Id == new ObjectId(id));
-                var update = Builders<Mongo.Entities.Task>.Update.Set(n => n.IsBaseline, true);
-                await _mongoDbContext.Collection<Mongo.Entities.Task>().FindOneAndUpdateAsync(filter, update);
+                var filter = Builders<StressTask>.Filter.Where(a => a.Id == new ObjectId(id));
+                var update = Builders<StressTask>.Update.Set(n => n.IsBaseline, true);
+                await _mongoDbContext.Collection<StressTask>().FindOneAndUpdateAsync(filter, update);
             }
 
             return Ok();
         }
 
-        private List<TaskReportItem> GenerateReport(Mongo.Entities.Task baseline, Mongo.Entities.Task previous, Mongo.Entities.Task current)
+        private List<TaskReportItem> GenerateReport(StressTask baseline, StressTask previous, StressTask current)
         {
             var items = new List<TaskReportItem>();
 
@@ -189,7 +189,7 @@ namespace WebApi.Controllers
             return items;
         }
 
-        private TaskReportItem GenerateItemOfId(Mongo.Entities.Task baseline, Mongo.Entities.Task previous, Mongo.Entities.Task current)
+        private TaskReportItem GenerateItemOfId(StressTask baseline, StressTask previous, StressTask current)
         {
             var item = new TaskReportItem
             {
@@ -202,7 +202,7 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfThread(Mongo.Entities.Task baseline, Mongo.Entities.Task previous, Mongo.Entities.Task current)
+        private TaskReportItem GenerateItemOfThread(StressTask baseline, StressTask previous, StressTask current)
         {
             var item = new TaskReportItem
             {
@@ -215,7 +215,7 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfConnection(Mongo.Entities.Task baseline, Mongo.Entities.Task previous, Mongo.Entities.Task current)
+        private TaskReportItem GenerateItemOfConnection(StressTask baseline, StressTask previous, StressTask current)
         {
             var item = new TaskReportItem
             {
@@ -228,7 +228,7 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfDuration(Mongo.Entities.Task baseline, Mongo.Entities.Task previous, Mongo.Entities.Task current)
+        private TaskReportItem GenerateItemOfDuration(StressTask baseline, StressTask previous, StressTask current)
         {
             var item = new TaskReportItem
             {
@@ -268,7 +268,7 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfQps(Mongo.Entities.Task baseline, Mongo.Entities.Task previous, Mongo.Entities.Task current)
+        private TaskReportItem GenerateItemOfQps(StressTask baseline, StressTask previous, StressTask current)
         {
             var item = new TaskReportItem
             {
@@ -283,7 +283,7 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfLatencyP50(Mongo.Entities.Task baseline, Mongo.Entities.Task previous, Mongo.Entities.Task current)
+        private TaskReportItem GenerateItemOfLatencyP50(StressTask baseline, StressTask previous, StressTask current)
         {
             var item = new TaskReportItem
             {
@@ -298,7 +298,7 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfLatencyP75(Mongo.Entities.Task baseline, Mongo.Entities.Task previous, Mongo.Entities.Task current)
+        private TaskReportItem GenerateItemOfLatencyP75(StressTask baseline, StressTask previous, StressTask current)
         {
             var item = new TaskReportItem
             {
@@ -313,7 +313,7 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfLatencyP90(Mongo.Entities.Task baseline, Mongo.Entities.Task previous, Mongo.Entities.Task current)
+        private TaskReportItem GenerateItemOfLatencyP90(StressTask baseline, StressTask previous, StressTask current)
         {
             var item = new TaskReportItem
             {
@@ -328,7 +328,7 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfLatencyP99(Mongo.Entities.Task baseline, Mongo.Entities.Task previous, Mongo.Entities.Task current)
+        private TaskReportItem GenerateItemOfLatencyP99(StressTask baseline, StressTask previous, StressTask current)
         {
             var item = new TaskReportItem
             {
@@ -343,7 +343,7 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfLatencyAvg(Mongo.Entities.Task baseline, Mongo.Entities.Task previous, Mongo.Entities.Task current)
+        private TaskReportItem GenerateItemOfLatencyAvg(StressTask baseline, StressTask previous, StressTask current)
         {
             var item = new TaskReportItem
             {
@@ -358,7 +358,7 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfLatencyStd(Mongo.Entities.Task baseline, Mongo.Entities.Task previous, Mongo.Entities.Task current)
+        private TaskReportItem GenerateItemOfLatencyStd(StressTask baseline, StressTask previous, StressTask current)
         {
             var item = new TaskReportItem
             {
@@ -373,7 +373,7 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfLatencyMax(Mongo.Entities.Task baseline, Mongo.Entities.Task previous, Mongo.Entities.Task current)
+        private TaskReportItem GenerateItemOfLatencyMax(StressTask baseline, StressTask previous, StressTask current)
         {
             var item = new TaskReportItem
             {
