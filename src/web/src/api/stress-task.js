@@ -27,3 +27,10 @@ export function addTask(sceneId) {
     method: 'post'
   })
 }
+
+export function switchBaseline(id) {
+  return request({
+    url: `/api/stress-tasks/${id}/baseline`,
+    method: 'patch'
+  })
+}

@@ -132,7 +132,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPatch("{id}/baseline")]
-        public async Task<IActionResult> SetAsBaseline([FromRoute] string id)
+        public async Task<IActionResult> SwitchBaseline([FromRoute] string id)
         {
             var task = await _mongoDbContext.Collection<StressTask>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
             if (task == null)
@@ -149,23 +149,19 @@ namespace WebApi.Controllers
 
             if (baseline != null)
             {
+                var removeFilter = Builders<StressTask>.Filter.Where(a => a.Id == baseline.Id);
+                var removeUpdate = Builders<StressTask>.Update.Set(n => n.IsBaseline, false);
+                await _mongoDbContext.Collection<StressTask>().FindOneAndUpdateAsync(removeFilter, removeUpdate);
+
                 if (baseline.Id == new ObjectId(id))
                 {
                     return Ok();
                 }
-                else
-                {
-                    var filter = Builders<StressTask>.Filter.Where(a => a.Id == baseline.Id);
-                    var update = Builders<StressTask>.Update.Set(n => n.IsBaseline, false);
-                    await _mongoDbContext.Collection<StressTask>().FindOneAndUpdateAsync(filter, update);
-                }
             }
-            else
-            {
-                var filter = Builders<StressTask>.Filter.Where(a => a.Id == new ObjectId(id));
-                var update = Builders<StressTask>.Update.Set(n => n.IsBaseline, true);
-                await _mongoDbContext.Collection<StressTask>().FindOneAndUpdateAsync(filter, update);
-            }
+
+            var addFilter = Builders<StressTask>.Filter.Where(a => a.Id == new ObjectId(id));
+            var addUpdate = Builders<StressTask>.Update.Set(n => n.IsBaseline, true);
+            await _mongoDbContext.Collection<StressTask>().FindOneAndUpdateAsync(addFilter, addUpdate);
 
             return Ok();
         }

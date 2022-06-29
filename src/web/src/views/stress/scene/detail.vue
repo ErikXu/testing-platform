@@ -53,7 +53,7 @@
       </el-table-column>
       <el-table-column :label="$t('IsBaseline')" align="left" width="100">
         <template slot-scope="scope">
-          <span>{{ scope.row.isBaseline }}</span>
+          <el-switch v-model="scope.row.isBaseline" @change="switchBaseline(scope.row)" />
         </template>
       </el-table-column>
       <el-table-column :label="$t('StartTime')" align="left">
@@ -94,6 +94,7 @@
 
 <script>
 import { getScene, getTaskOfScene } from '@/api/stress-scene'
+import { switchBaseline } from '@/api/stress-task'
 
 export default {
   data() {
@@ -113,6 +114,11 @@ export default {
       })
       getTaskOfScene(id).then(response => {
         this.tasks = response
+      })
+    },
+    switchBaseline(row) {
+      switchBaseline(row.id).then(() => {
+        this.fetchData()
       })
     },
     report(row) {

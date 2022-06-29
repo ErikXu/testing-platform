@@ -25,9 +25,9 @@
           <el-tag v-else-if="scope.row.status === 3" type="danger" size="small">{{ $t('Error') }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('IsBaseline')" align="left" width="100">
+      <el-table-column :label="$t('IsBaseline')" align="center" width="100">
         <template slot-scope="scope">
-          <span>{{ scope.row.isBaseline }}</span>
+          <el-switch v-model="scope.row.isBaseline" disabled />
         </template>
       </el-table-column>
       <el-table-column :label="$t('StartTime')" align="left">
