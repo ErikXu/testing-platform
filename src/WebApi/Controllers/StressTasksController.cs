@@ -115,6 +115,7 @@ namespace WebApi.Controllers
             var task = new StressTask
             {
                 SceneId = scene.Id,
+                SceneName = scene.Name,
                 Url = scene.Url,
                 Method = scene.Method,
                 Thread = scene.Thread,

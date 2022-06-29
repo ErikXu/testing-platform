@@ -7,6 +7,8 @@ namespace WebApi.Mongo.Entities
     {
         public ObjectId SceneId { get; set; }
 
+        public string SceneName { get; set; }
+
         public string Url { get; set; }
 
         public string Method { get; set; }

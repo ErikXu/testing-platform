@@ -14,7 +14,7 @@
       </el-table-column>
       <el-table-column :label="$t('Scene')" align="left" width="140">
         <template slot-scope="scope">
-          <span>{{ scope.row.name }}</span>
+          <span>{{ scope.row.sceneName }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('Status')" align="center" width="80">
