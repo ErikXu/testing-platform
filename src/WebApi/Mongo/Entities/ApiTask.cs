@@ -6,7 +6,9 @@ namespace WebApi.Mongo.Entities
 {
     public class ApiTask : Entity
     {
-        public ObjectId ApiSceneId { get; set; }
+        public ObjectId SceneId { get; set; }
+
+        public string SceneName { get; set; }
 
         public string Collection { get; set; }
 

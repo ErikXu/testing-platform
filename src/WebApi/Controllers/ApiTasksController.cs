@@ -38,10 +38,10 @@ namespace WebApi.Controllers
         /// Create api task
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromQuery] string apiSceneId)
+        public async Task<IActionResult> Create([FromQuery] string sceneId)
         {
             var apiScene = await _mongoDbContext.Collection<ApiScene>()
-                                             .Find(n => n.Id == new ObjectId(apiSceneId))
+                                             .Find(n => n.Id == new ObjectId(sceneId))
                                              .SingleOrDefaultAsync();
 
             if (apiScene == null)
@@ -51,7 +51,8 @@ namespace WebApi.Controllers
 
             var apiTask = new ApiTask
             {
-                ApiSceneId = apiScene.Id,
+                SceneId = apiScene.Id,
+                SceneName = apiScene.Name,
                 Collection = apiScene.Collection,
                 Environment = apiScene.Environment,
                 Status = ApiTaskStatus.Queue,

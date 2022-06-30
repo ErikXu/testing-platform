@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <h3>{{ $t('Stress Test') }}</h3>
     <el-button size="mini" type="primary" @click="create">{{ $t('Create') }}</el-button>
     <el-table
       :data="list"
@@ -113,7 +114,7 @@ import { getMethodList, getUnitList, getSceneList, addScene } from '@/api/stress
 import { addTask } from '@/api/stress-task'
 
 export default {
-  name: 'Scene',
+  name: 'StressScene',
   data() {
     return {
       list: [],
@@ -162,7 +163,7 @@ export default {
           type: 'success',
           message: 'Run success!'
         })
-        this.$router.push({ name: 'scene-detail', params: { id: row.id }})
+        this.$router.push({ name: 'stress-scene-detail', params: { id: row.id }})
       })
     },
     detail(row) {
@@ -187,7 +188,7 @@ export default {
     },
     reset() {
       this.formVisible = false
-      this.$refs.workspaceForm.resetFields()
+      this.$refs.sceneForm.resetFields()
     }
   }
 }
@@ -196,6 +197,7 @@ export default {
 <i18n>
 {
   "en": {
+    "Stress Test": "Stress Test",
     "Create": "Create",
     "Name": "Name",
     "Url": "Url",
@@ -213,6 +215,7 @@ export default {
     "Reset": "Reset"
   },
   "zh": {
+    "Stress Test": "压力测试",
     "Create": "创建",
     "Name": "名称",
     "Url": "Url",

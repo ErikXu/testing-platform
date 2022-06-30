@@ -56,34 +56,49 @@ export const constantRoutes = [
   },
 
   {
-    path: '/stress',
+    path: '/stress-test',
     component: Layout,
     name: 'stress',
     meta: { title: 'Stress Test', icon: 'el-icon-folder' },
     children: [
       {
-        path: '/stress/scene',
-        name: 'scene',
+        path: '/stress-test/scene',
+        name: 'stress-scene',
         component: () => import('@/views/stress/scene/index'),
         meta: { title: 'Scene', icon: 'el-icon-s-grid' }
       },
       {
-        path: '/stress/scene/:id',
-        name: 'scene-detail',
+        path: '/stress-test/scene/:id',
+        name: 'stress-scene-detail',
         component: () => import('@/views/stress/scene/detail'),
         hidden: true
       },
       {
-        path: '/stress/task',
-        name: 'task',
+        path: '/stress-test/task',
+        name: 'stress-task',
         component: () => import('@/views/stress/task/index'),
         meta: { title: 'Task', icon: 'el-icon-document' }
       },
       {
-        path: '/stress/task/:id/report',
-        name: 'task-report',
+        path: '/stress-test/task/:id/report',
+        name: 'stress-task-report',
         component: () => import('@/views/stress/task/report'),
         hidden: true
+      }
+    ]
+  },
+
+  {
+    path: '/api-test',
+    component: Layout,
+    name: 'api',
+    meta: { title: 'Api Test', icon: 'el-icon-folder' },
+    children: [
+      {
+        path: '/api-test/scene',
+        name: 'api-scene',
+        component: () => import('@/views/api/scene/index'),
+        meta: { title: 'Scene', icon: 'el-icon-s-grid' }
       }
     ]
   },

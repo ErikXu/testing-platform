@@ -22,6 +22,18 @@ namespace WebApi.Controllers
             _mongoDbContext = mongoDbContext;
 
         }
+        /// <summary>
+        /// Get scene list
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> List()
+        {
+            var list = await _mongoDbContext.Collection<ApiScene>()
+                                            .Find(new BsonDocument())
+                                            .Sort(Builders<ApiScene>.Sort.Ascending(n => n.CreationTime))
+                                            .ToListAsync();
+            return Ok(list);
+        }
 
         /// <summary>
         /// Get api scene by id
@@ -55,7 +67,7 @@ namespace WebApi.Controllers
             return CreatedAtRoute("GetApiScene", new { id = apiScene.Id.ToString() }, apiScene);
         }
 
-        [HttpPatch("{id}/collection")]
+        [HttpPost("{id}/collection")]
         public async Task<IActionResult> UploadCollection([FromRoute] string id, IFormFile file)
         {
             var apiScene = await _mongoDbContext.Collection<ApiScene>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
@@ -69,6 +81,25 @@ namespace WebApi.Controllers
             var collection = await reader.ReadToEndAsync();
 
             apiScene.Collection = collection;
+            _mongoDbContext.Collection<ApiScene>().FindOneAndReplace(n => n.Id == apiScene.Id, apiScene);
+
+            return Ok(apiScene);
+        }
+
+        [HttpPost("{id}/environment")]
+        public async Task<IActionResult> UploadEnvironment([FromRoute] string id, IFormFile file)
+        {
+            var apiScene = await _mongoDbContext.Collection<ApiScene>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
+            if (apiScene == null)
+            {
+                return NotFound();
+            }
+
+            using var stream = file.OpenReadStream();
+            using var reader = new StreamReader(stream);
+            var environment = await reader.ReadToEndAsync();
+
+            apiScene.Environment = environment;
             _mongoDbContext.Collection<ApiScene>().FindOneAndReplace(n => n.Id == apiScene.Id, apiScene);
 
             return Ok(apiScene);
