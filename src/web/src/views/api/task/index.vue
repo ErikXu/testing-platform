@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <h3>{{ $t('Stress Test Task') }}</h3>
+    <h3>{{ $t('Api Test Task') }}</h3>
     <el-table
       :data="list"
       border
@@ -24,11 +24,6 @@
           <el-tag v-else-if="scope.row.status === 1" type="primary" size="small">{{ $t('Runing') }}</el-tag>
           <el-tag v-else-if="scope.row.status === 2" type="success" size="small">{{ $t('Done') }}</el-tag>
           <el-tag v-else-if="scope.row.status === 3" type="danger" size="small">{{ $t('Error') }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('IsBaseline')" align="center" width="100">
-        <template slot-scope="scope">
-          <el-switch v-model="scope.row.isBaseline" disabled />
         </template>
       </el-table-column>
       <el-table-column :label="$t('StartTime')" align="left">
@@ -58,7 +53,7 @@
 </template>
 
 <script>
-import { getTaskList } from '@/api/stress-task'
+import { getTaskList } from '@/api/api-task'
 
 export default {
   name: 'Task',
@@ -77,7 +72,7 @@ export default {
       })
     },
     report(row) {
-      this.$router.push({ name: 'stress-task-report', params: { id: row.id }})
+      this.$router.push({ name: 'api-report', params: { id: row.id }})
     }
   }
 }
@@ -86,7 +81,7 @@ export default {
 <i18n>
 {
   "en": {
-    "Stress Test Task": "Stress Test - Task",
+    "Api Test Task": "Api Test - Task",
     "Scene": "Scene",
     "Status": "Status",
     "IsBaseline": "IsBaseline",
@@ -101,7 +96,7 @@ export default {
     "Error": "Error"
   },
   "zh": {
-    "Stress Test Task": "压力测试 - 任务",
+    "Api Test Task": "接口测试 - 任务",
     "Scene": "场景",
     "Status": "状态",
     "IsBaseline": "基线版本",

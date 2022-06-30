@@ -20,6 +20,19 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
+        /// Get task list
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> List()
+        {
+            var list = await _mongoDbContext.Collection<ApiTask>()
+                                            .Find(new BsonDocument())
+                                            .Sort(Builders<ApiTask>.Sort.Descending(n => n.CreationTime))
+                                            .ToListAsync();
+            return Ok(list);
+        }
+
+        /// <summary>
         /// Get api task by id
         /// </summary>
         [HttpGet("{id}", Name = "GetApiTask")]

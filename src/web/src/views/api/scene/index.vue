@@ -179,7 +179,7 @@ export default {
 <i18n>
 {
   "en": {
-    "Api Test": "Api Test",
+    "Api Test": "Api Test - Scene",
     "Create": "Create",
     "Name": "Name",
     "Description": "Description",
@@ -195,7 +195,7 @@ export default {
     "Reset": "Reset"
   },
   "zh": {
-    "Api Test": "接口测试",
+    "Api Test": "接口测试 - 场景",
     "Create": "创建",
     "Name": "名称",
     "Description": "描述",

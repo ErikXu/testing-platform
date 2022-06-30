@@ -99,6 +99,12 @@ export const constantRoutes = [
         name: 'api-scene',
         component: () => import('@/views/api/scene/index'),
         meta: { title: 'Scene', icon: 'el-icon-s-grid' }
+      },
+      {
+        path: '/api-test/task',
+        name: 'api-task',
+        component: () => import('@/views/api/task/index'),
+        meta: { title: 'Task', icon: 'el-icon-document' }
       }
     ]
   },

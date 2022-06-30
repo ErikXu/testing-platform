@@ -197,7 +197,7 @@ export default {
 <i18n>
 {
   "en": {
-    "Stress Test": "Stress Test",
+    "Stress Test": "Stress Test - Scene",
     "Create": "Create",
     "Name": "Name",
     "Url": "Url",
@@ -215,7 +215,7 @@ export default {
     "Reset": "Reset"
   },
   "zh": {
-    "Stress Test": "压力测试",
+    "Stress Test": "压力测试 - 场景",
     "Create": "创建",
     "Name": "名称",
     "Url": "Url",
