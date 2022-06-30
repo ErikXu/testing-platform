@@ -167,7 +167,7 @@ export default {
       })
     },
     detail(row) {
-      this.$router.push({ name: 'scene-detail', params: { id: row.id }})
+      this.$router.push({ name: 'stress-scene-detail', params: { id: row.id }})
     },
     submit() {
       this.$refs.sceneForm.validate(valid => {

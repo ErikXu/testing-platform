@@ -8,6 +8,7 @@ namespace WebApi.Models
         public EntityProfile()
         {
             CreateMap<StressSceneCreateForm, StressScene>();
+            CreateMap<ApiScene, ApiSceneDetail>();
         }
     }
 }

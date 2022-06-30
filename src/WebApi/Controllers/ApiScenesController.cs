@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using WebApi.Models;
@@ -16,10 +19,12 @@ namespace WebApi.Controllers
     public class ApiScenesController : ControllerBase
     {
         private readonly MongoDbContext _mongoDbContext;
+        private readonly IMapper _mapper;
 
-        public ApiScenesController(MongoDbContext mongoDbContext)
+        public ApiScenesController(MongoDbContext mongoDbContext, IMapper mapper)
         {
             _mongoDbContext = mongoDbContext;
+            _mapper = mapper;
 
         }
         /// <summary>
@@ -46,7 +51,65 @@ namespace WebApi.Controllers
             {
                 return NotFound();
             }
-            return Ok(apiScene);
+
+            var detail = _mapper.Map<ApiSceneDetail>(apiScene);
+
+            if (!string.IsNullOrWhiteSpace(apiScene.Collection))
+            {
+                try
+                {
+                    var collectionInfo = JsonConvert.DeserializeObject<CollectionInfo>(apiScene.Collection);
+                    if (collectionInfo.Item == null)
+                    {
+                        detail.CollectionItems = new List<CollectionItem>();
+                        detail.IsCollectionInvalid = true;
+                    }
+                    else
+                    {
+                        detail.CollectionItems = collectionInfo.Item;
+                    }
+                }
+                catch
+                {
+                    detail.IsCollectionInvalid = true;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(apiScene.Environment))
+            {
+                try
+                {
+                    var environmentInfo = JsonConvert.DeserializeObject<EnvironmentInfo>(apiScene.Environment);
+                    if (environmentInfo.Name == null || environmentInfo.Values == null)
+                    {
+                        detail.EnvironmentInfo = new EnvironmentInfo();
+                        detail.IsEnvironmentInvalid = true;
+                    }
+                    else
+                    {
+                        detail.EnvironmentInfo = environmentInfo;
+                    }
+                }
+                catch
+                {
+                    detail.IsEnvironmentInvalid = true;
+                }
+            }
+
+            return Ok(detail);
+        }
+
+        /// <summary>
+        /// Get tasks of scene
+        /// </summary>
+        [HttpGet("{id}/tasks")]
+        public async Task<IActionResult> ListByScene([FromRoute] string id)
+        {
+            var list = await _mongoDbContext.Collection<ApiTask>()
+                                            .Find(n => n.SceneId == new ObjectId(id))
+                                            .Sort(Builders<ApiTask>.Sort.Descending(n => n.CreationTime))
+                                            .ToListAsync();
+            return Ok(list);
         }
 
         /// <summary>

@@ -2,12 +2,12 @@
 
 namespace WebApi.Models
 {
-    public class TaskReport
+    public class StressTaskReport
     {
-        public List<TaskReportItem> Items { get; set; }
+        public List<StressTaskReportItem> Items { get; set; }
     }
 
-    public class TaskReportItem
+    public class StressTaskReportItem
     {
         public string Name { get; set; }
 

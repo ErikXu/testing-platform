@@ -68,7 +68,7 @@ namespace WebApi.Controllers
 
             var previous = tasks.Where(n => n.CreationTime < task.CreationTime).OrderByDescending(n => n.CreationTime).FirstOrDefault();
 
-            var report = new TaskReport
+            var report = new StressTaskReport
             {
                 Items = GenerateReport(baseline, previous, task)
             };
@@ -166,9 +166,9 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        private List<TaskReportItem> GenerateReport(StressTask baseline, StressTask previous, StressTask current)
+        private List<StressTaskReportItem> GenerateReport(StressTask baseline, StressTask previous, StressTask current)
         {
-            var items = new List<TaskReportItem>();
+            var items = new List<StressTaskReportItem>();
 
             items.Add(GenerateItemOfId(baseline, previous, current));
             items.Add(GenerateItemOfThread(baseline, previous, current));
@@ -186,9 +186,9 @@ namespace WebApi.Controllers
             return items;
         }
 
-        private TaskReportItem GenerateItemOfId(StressTask baseline, StressTask previous, StressTask current)
+        private StressTaskReportItem GenerateItemOfId(StressTask baseline, StressTask previous, StressTask current)
         {
-            var item = new TaskReportItem
+            var item = new StressTaskReportItem
             {
                 Name = "Id",
                 Baseline = baseline?.Id.ToString(),
@@ -199,9 +199,9 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfThread(StressTask baseline, StressTask previous, StressTask current)
+        private StressTaskReportItem GenerateItemOfThread(StressTask baseline, StressTask previous, StressTask current)
         {
-            var item = new TaskReportItem
+            var item = new StressTaskReportItem
             {
                 Name = "Thread",
                 Baseline = baseline?.Thread.ToString(),
@@ -212,9 +212,9 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfConnection(StressTask baseline, StressTask previous, StressTask current)
+        private StressTaskReportItem GenerateItemOfConnection(StressTask baseline, StressTask previous, StressTask current)
         {
-            var item = new TaskReportItem
+            var item = new StressTaskReportItem
             {
                 Name = "Connection",
                 Baseline = baseline?.Connection.ToString(),
@@ -225,9 +225,9 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfDuration(StressTask baseline, StressTask previous, StressTask current)
+        private StressTaskReportItem GenerateItemOfDuration(StressTask baseline, StressTask previous, StressTask current)
         {
-            var item = new TaskReportItem
+            var item = new StressTaskReportItem
             {
                 Name = "Duration - second",
                 Baseline = baseline?.Duration.ToString(),
@@ -265,9 +265,9 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfQps(StressTask baseline, StressTask previous, StressTask current)
+        private StressTaskReportItem GenerateItemOfQps(StressTask baseline, StressTask previous, StressTask current)
         {
-            var item = new TaskReportItem
+            var item = new StressTaskReportItem
             {
                 Name = "Qps",
                 Baseline = baseline?.Result?.Qps.ToString(),
@@ -280,9 +280,9 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfLatencyP50(StressTask baseline, StressTask previous, StressTask current)
+        private StressTaskReportItem GenerateItemOfLatencyP50(StressTask baseline, StressTask previous, StressTask current)
         {
-            var item = new TaskReportItem
+            var item = new StressTaskReportItem
             {
                 Name = "Latency 50% - ms",
                 Baseline = baseline?.Result?.LatencyP50.ToString(),
@@ -295,9 +295,9 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfLatencyP75(StressTask baseline, StressTask previous, StressTask current)
+        private StressTaskReportItem GenerateItemOfLatencyP75(StressTask baseline, StressTask previous, StressTask current)
         {
-            var item = new TaskReportItem
+            var item = new StressTaskReportItem
             {
                 Name = "Latency 75% - ms",
                 Baseline = baseline?.Result?.LatencyP75.ToString(),
@@ -310,9 +310,9 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfLatencyP90(StressTask baseline, StressTask previous, StressTask current)
+        private StressTaskReportItem GenerateItemOfLatencyP90(StressTask baseline, StressTask previous, StressTask current)
         {
-            var item = new TaskReportItem
+            var item = new StressTaskReportItem
             {
                 Name = "Latency 90% - ms",
                 Baseline = baseline?.Result?.LatencyP90.ToString(),
@@ -325,9 +325,9 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfLatencyP99(StressTask baseline, StressTask previous, StressTask current)
+        private StressTaskReportItem GenerateItemOfLatencyP99(StressTask baseline, StressTask previous, StressTask current)
         {
-            var item = new TaskReportItem
+            var item = new StressTaskReportItem
             {
                 Name = "Latency 99% - ms",
                 Baseline = baseline?.Result?.LatencyP99.ToString(),
@@ -340,9 +340,9 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfLatencyAvg(StressTask baseline, StressTask previous, StressTask current)
+        private StressTaskReportItem GenerateItemOfLatencyAvg(StressTask baseline, StressTask previous, StressTask current)
         {
-            var item = new TaskReportItem
+            var item = new StressTaskReportItem
             {
                 Name = "Latency Avg - ms",
                 Baseline = baseline?.Result?.LatencyAvg.ToString(),
@@ -355,9 +355,9 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfLatencyStd(StressTask baseline, StressTask previous, StressTask current)
+        private StressTaskReportItem GenerateItemOfLatencyStd(StressTask baseline, StressTask previous, StressTask current)
         {
-            var item = new TaskReportItem
+            var item = new StressTaskReportItem
             {
                 Name = "Latency Std - ms",
                 Baseline = baseline?.Result?.LatencyStd.ToString(),
@@ -370,9 +370,9 @@ namespace WebApi.Controllers
             return item;
         }
 
-        private TaskReportItem GenerateItemOfLatencyMax(StressTask baseline, StressTask previous, StressTask current)
+        private StressTaskReportItem GenerateItemOfLatencyMax(StressTask baseline, StressTask previous, StressTask current)
         {
-            var item = new TaskReportItem
+            var item = new StressTaskReportItem
             {
                 Name = "Latency Max - ms",
                 Baseline = baseline?.Result?.LatencyMax.ToString(),

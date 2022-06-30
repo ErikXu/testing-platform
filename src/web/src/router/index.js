@@ -71,6 +71,7 @@ export const constantRoutes = [
         path: '/stress-test/scene/:id',
         name: 'stress-scene-detail',
         component: () => import('@/views/stress/scene/detail'),
+        meta: { title: 'Scene Detail' },
         hidden: true
       },
       {
@@ -99,6 +100,13 @@ export const constantRoutes = [
         name: 'api-scene',
         component: () => import('@/views/api/scene/index'),
         meta: { title: 'Scene', icon: 'el-icon-s-grid' }
+      },
+      {
+        path: '/api-test/scene/:id',
+        name: 'api-scene-detail',
+        component: () => import('@/views/api/scene/detail'),
+        meta: { title: 'Scene Detail' },
+        hidden: true
       },
       {
         path: '/api-test/task',
