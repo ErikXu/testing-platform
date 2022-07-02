@@ -90,5 +90,7 @@ export const initDefaultLocale = () => {
       return
     }
     window.location.replace(location.protocol + '//' + location.host)
+  } else if (!Object.values(LOCALE_MAP).includes(path)) {
+    window.location.replace(location.protocol + '//' + location.host + '/' + getLocale())
   }
 }
