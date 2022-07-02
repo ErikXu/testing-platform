@@ -18,7 +18,32 @@ function loadLocaleMessages() {
   return messages
 }
 
+/**
+ * locale key to router path prefix keypair
+ */
+export const LOCALE_MAP = {
+  en: '/en',
+  zh: '/zh'
+}
+
+const navigatorLangMAP = {
+  en: 'en-US',
+  zh: 'zh-CN'
+}
+
 export const getLocale = () => {
+  const path = location.pathname
+  let pathLang = ''
+  Object.keys(LOCALE_MAP).forEach(targetLang => {
+    // get locale from url first
+    const langPrefix = LOCALE_MAP[targetLang]
+    if (path.startsWith(langPrefix)) {
+      pathLang = targetLang
+    }
+  })
+  if (pathLang) {
+    return pathLang
+  }
   if (localStorage.getItem(langguageKey)) {
     return localStorage.getItem(langguageKey)
   }
@@ -27,7 +52,7 @@ export const getLocale = () => {
 
 /**
  * 设置语言，目前支持中文和英文
- * @param {String} lang zh-CN | en
+ * @param {String} lang zh | en
  */
 export const setLocale = (lang) => {
   localStorage.setItem(langguageKey, lang)
@@ -38,3 +63,32 @@ export default new VueI18n({
   fallbackLocale: getLocale() || 'en',
   messages: loadLocaleMessages()
 })
+
+export const initDefaultLocale = () => {
+  const path = location.pathname
+  if (path === '/') {
+    let pathLang = ''
+    Object.keys(LOCALE_MAP).forEach(targetLang => {
+      // get locale from url first
+      var langPrefix = LOCALE_MAP[targetLang]
+      if (path.startsWith(langPrefix)) {
+        pathLang = targetLang
+      }
+    })
+    if (pathLang) return
+    const storagedLang = localStorage.getItem(langguageKey)
+    if (storagedLang) {
+      const routerPrefix = LOCALE_MAP[storagedLang]
+      if (routerPrefix) {
+        window.location.replace(location.protocol + '//' + location.host + routerPrefix)
+        return
+      }
+    }
+
+    if (Object.values(navigatorLangMAP).includes(navigator.language)) {
+      window.location.replace(location.protocol + '//' + location.host + '/' + navigator.language)
+      return
+    }
+    window.location.replace(location.protocol + '//' + location.host)
+  }
+}

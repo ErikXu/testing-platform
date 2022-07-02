@@ -48,9 +48,12 @@ export default {
   methods: {
     switchLang(targetLang) {
       if (this.lang === targetLang) return
+      let locationPath = window.location.href.replace(window.location.protocol + '//' + window.location.host, '')
+      locationPath = locationPath.replace(this.lang, targetLang)
+      const targetLocation = window.location.protocol + '//' + window.location.host + locationPath
       this.lang = targetLang
       setLocale(targetLang)
-      location.reload()
+      window.location.replace(targetLocation)
     },
     handleLangDropdownToggle(visible) {
       this.langDropdownVisible = visible
