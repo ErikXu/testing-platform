@@ -5,6 +5,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
+import { getLocale, LOCALE_MAP } from '@/i18n'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -42,7 +43,6 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
-
   {
     path: '/',
     component: Layout,
@@ -121,10 +121,13 @@ export const constantRoutes = [
   { path: '*', redirect: '/404', hidden: true }
 ]
 
+const routerBase = LOCALE_MAP[getLocale()]
+
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+  routes: constantRoutes,
+  base: routerBase
 })
 
 const router = createRouter()

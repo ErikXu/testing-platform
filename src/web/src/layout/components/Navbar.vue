@@ -3,8 +3,8 @@
     <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
     <breadcrumb class="breadcrumb-container" />
-
     <div class="right-menu">
+      <Header class="select-lang" />
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
@@ -35,11 +35,13 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import Header from '@/components/Header'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    Header
   },
   computed: {
     ...mapGetters([
@@ -88,7 +90,14 @@ export default {
     float: right;
     height: 100%;
     line-height: 50px;
-
+    display: flex;
+    align-items: center;
+    min-width: 210px;
+    justify-content: space-between;
+    .select-lang {
+      height: 100%;
+      width: 120px;
+    }
     &:focus {
       outline: none;
     }
@@ -113,9 +122,10 @@ export default {
 
     .avatar-container {
       margin-right: 30px;
-
+      display: flex;
+      align-items: center;
       .avatar-wrapper {
-        margin-top: 5px;
+        margin-top: 19px;
         position: relative;
 
         .user-avatar {
@@ -129,7 +139,7 @@ export default {
           cursor: pointer;
           position: absolute;
           right: -20px;
-          top: 25px;
+          top: 15px;
           font-size: 12px;
         }
       }
