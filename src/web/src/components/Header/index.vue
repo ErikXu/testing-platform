@@ -82,7 +82,6 @@ header{
       color: #888;
       line-height: 40px;
       transition: .2s;
-      padding-bottom: 6px;
       user-select: none;
 
       &:hover {
