@@ -188,6 +188,9 @@ export default {
         message: 'Upload success!'
       })
       this.fetchData()
+    },
+    report(row) {
+      this.$router.push({ name: 'api-task-report', params: { id: row.id }})
     }
   }
 }

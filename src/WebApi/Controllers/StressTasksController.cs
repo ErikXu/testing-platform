@@ -23,7 +23,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Get task list
+        /// Get stress task list
         /// </summary>
         [HttpGet]
         public async Task<IActionResult> List()
@@ -36,7 +36,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Get task by id
+        /// Get stress task by id
         /// </summary>
         [HttpGet("{id}", Name = "GetTask")]
         public async Task<IActionResult> Get([FromRoute] string id)
@@ -51,7 +51,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Get task report by id
+        /// Get stress task report by id
         /// </summary>
         [HttpGet("{id}/report")]
         public async Task<IActionResult> GetReport([FromRoute] string id)
@@ -77,7 +77,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Get task scene by id
+        /// Get stress task scene by id
         /// </summary>
         [HttpGet("{id}/scene")]
         public async Task<IActionResult> GetScene([FromRoute] string id)
@@ -98,7 +98,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Create task
+        /// Create stress task
         /// </summary>
         [HttpPost]
         public async Task<IActionResult> Create([FromQuery] string sceneId)

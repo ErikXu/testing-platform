@@ -20,7 +20,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Get task list
+        /// Get api task list
         /// </summary>
         [HttpGet]
         public async Task<IActionResult> List()
@@ -45,6 +45,27 @@ namespace WebApi.Controllers
             }
 
             return Ok(apiTask);
+        }
+
+        /// <summary>
+        /// Get api task scene by id
+        /// </summary>
+        [HttpGet("{id}/scene")]
+        public async Task<IActionResult> GetScene([FromRoute] string id)
+        {
+            var task = await _mongoDbContext.Collection<ApiTask>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
+            if (task == null)
+            {
+                return NotFound();
+            }
+
+            var scene = await _mongoDbContext.Collection<ApiScene>().Find(n => n.Id == task.SceneId).SingleOrDefaultAsync();
+            if (scene == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(scene);
         }
 
         /// <summary>
@@ -76,6 +97,5 @@ namespace WebApi.Controllers
 
             return CreatedAtRoute("GetApiTask", new { id = apiTask.Id.ToString() }, apiTask);
         }
-
     }
 }

@@ -122,7 +122,7 @@ export default {
       })
     },
     report(row) {
-      this.$router.push({ name: 'task-report', params: { id: row.id }})
+      this.$router.push({ name: 'stress-task-report', params: { id: row.id }})
     },
     monitor(row) {
       var url = window.location.protocol + '//' + window.location.hostname + ':8080/?id=' + row.id

@@ -113,6 +113,12 @@ export const constantRoutes = [
         name: 'api-task',
         component: () => import('@/views/api/task/index'),
         meta: { title: 'Task', icon: 'el-icon-document' }
+      },
+      {
+        path: '/api-test/task/:id/report',
+        name: 'api-task-report',
+        component: () => import('@/views/api/task/report'),
+        hidden: true
       }
     ]
   },

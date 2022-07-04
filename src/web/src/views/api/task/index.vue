@@ -72,7 +72,7 @@ export default {
       })
     },
     report(row) {
-      this.$router.push({ name: 'api-report', params: { id: row.id }})
+      this.$router.push({ name: 'api-task-report', params: { id: row.id }})
     }
   }
 }
