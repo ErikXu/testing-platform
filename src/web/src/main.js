@@ -14,7 +14,7 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
-import i18n from './i18n'
+import i18n, { initDefaultLocale } from './i18n'
 
 /**
  * If you don't want to use mock-server
@@ -28,6 +28,8 @@ if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
 }
+
+initDefaultLocale()
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
