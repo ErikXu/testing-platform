@@ -94,6 +94,8 @@ namespace WebApi.Mongo.Entities
 
         public NewmanTimings Timings { get; set; }
 
+        public List<NewmanExecutions> Executions { get; set; }
+
         public NewmanTransfers Transfers { get; set; }
     }
 
@@ -141,6 +143,23 @@ namespace WebApi.Mongo.Entities
 
         public long Completed { get; set; }
     }
+
+    public class NewmanExecutions
+    {
+        public NewmanExecutionResponse Response { get; set; }
+    }
+
+    public class NewmanExecutionResponse
+    {
+        public string Status { get; set; }
+
+        public int Code { get; set; }
+
+        public int ResponseTime { get; set; }
+
+        public int ResponseSize { get; set; }
+    }
+
 
     public class NewmanTransfers
     {

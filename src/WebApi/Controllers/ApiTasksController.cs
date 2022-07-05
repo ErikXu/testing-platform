@@ -2,7 +2,10 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using WebApi.Models;
 using WebApi.Mongo;
 using WebApi.Mongo.Entities;
 
@@ -45,6 +48,50 @@ namespace WebApi.Controllers
             }
 
             return Ok(apiTask);
+        }
+
+        /// <summary>
+        /// Get stress task report by id
+        /// </summary>
+        [HttpGet("{id}/report")]
+        public async Task<IActionResult> GetReport([FromRoute] string id)
+        {
+            var apiTask = await _mongoDbContext.Collection<ApiTask>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
+            if (apiTask == null)
+            {
+                return NotFound();
+            }
+
+            var report = new ApiTaskReport
+            {
+                Items = new List<ApiTaskReportItem>()
+            };
+
+            if (apiTask.Result != null)
+            {
+                var index = 0;
+                foreach (var item in apiTask.Result.Collection.Item)
+                {
+                    var execution = apiTask.Result.Run.Executions[index++];
+                    var reportItem = new ApiTaskReportItem
+                    {
+                        Name = item.Name,
+                        Method = item.Request.Method,
+                        Status = execution.Response.Status,
+                        Code = execution.Response.Code,
+                        ResponseTime = execution.Response.ResponseTime,
+                        ResponseSize = execution.Response.ResponseSize
+                    };
+
+                    var host = string.Join('.', item.Request.Url.Host);
+                    var path = string.Join('/', item.Request.Url.Path).Trim('/');
+                    reportItem.Url = $"{item.Request.Url.Protocol}://{host}/{path}";
+
+                    report.Items.Add(reportItem);
+                }
+            }
+
+            return Ok(report);
         }
 
         /// <summary>

@@ -7,6 +7,20 @@ export function getTaskList() {
   })
 }
 
+export function getTask(id) {
+  return request({
+    url: `/api/api-tasks/${id}`,
+    method: 'get'
+  })
+}
+
+export function getReportOfTask(id) {
+  return request({
+    url: `/api/api-tasks/${id}/report`,
+    method: 'get'
+  })
+}
+
 export function getSceneOfTask(id) {
   return request({
     url: `/api/api-tasks/${id}/scene`,
