@@ -4,10 +4,12 @@ namespace WebApi.Models
 {
     public class ApiTaskReport
     {
-        public List<ApiTaskReportItem> Items { get; set; }
+        public List<ApiItem> ApiItems { get; set; }
+
+        public List<ApiTaskReportItem> ReportItems { get; set; }
     }
 
-    public class ApiTaskReportItem
+    public class ApiItem
     {
         public string Name { get; set; }
 
@@ -22,5 +24,16 @@ namespace WebApi.Models
         public int ResponseTime { get; set; }
 
         public int ResponseSize { get; set; }
+    }
+
+    public class ApiTaskReportItem
+    {
+        public string Name { get;set; }
+
+        public int Total { get; set; }
+
+        public int Pending { get; set; }
+
+        public int Failed { get; set; }
     }
 }

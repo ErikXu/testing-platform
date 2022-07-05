@@ -64,7 +64,8 @@ namespace WebApi.Controllers
 
             var report = new ApiTaskReport
             {
-                Items = new List<ApiTaskReportItem>()
+                ApiItems = new List<ApiItem>(),
+                ReportItems = new List<ApiTaskReportItem>()
             };
 
             if (apiTask.Result != null)
@@ -73,7 +74,7 @@ namespace WebApi.Controllers
                 foreach (var item in apiTask.Result.Collection.Item)
                 {
                     var execution = apiTask.Result.Run.Executions[index++];
-                    var reportItem = new ApiTaskReportItem
+                    var apiItem = new ApiItem
                     {
                         Name = item.Name,
                         Method = item.Request.Method,
@@ -85,10 +86,20 @@ namespace WebApi.Controllers
 
                     var host = string.Join('.', item.Request.Url.Host);
                     var path = string.Join('/', item.Request.Url.Path).Trim('/');
-                    reportItem.Url = $"{item.Request.Url.Protocol}://{host}/{path}";
+                    apiItem.Url = $"{item.Request.Url.Protocol}://{host}/{path}";
 
-                    report.Items.Add(reportItem);
+                    report.ApiItems.Add(apiItem);
                 }
+
+                report.ReportItems.Add(GenerateItem("Iterations", apiTask.Result.Run.Stats.Iterations));
+                report.ReportItems.Add(GenerateItem("Items", apiTask.Result.Run.Stats.Items));
+                report.ReportItems.Add(GenerateItem("Scripts", apiTask.Result.Run.Stats.Scripts));
+                report.ReportItems.Add(GenerateItem("Prerequests", apiTask.Result.Run.Stats.Prerequests));
+                report.ReportItems.Add(GenerateItem("Requests", apiTask.Result.Run.Stats.Requests));
+                report.ReportItems.Add(GenerateItem("Tests", apiTask.Result.Run.Stats.Tests));
+                report.ReportItems.Add(GenerateItem("Assertions", apiTask.Result.Run.Stats.Assertions));
+                report.ReportItems.Add(GenerateItem("TestScripts", apiTask.Result.Run.Stats.TestScripts));
+                report.ReportItems.Add(GenerateItem("PrerequestScripts", apiTask.Result.Run.Stats.PrerequestScripts));
             }
 
             return Ok(report);
@@ -143,6 +154,19 @@ namespace WebApi.Controllers
             await _mongoDbContext.Collection<ApiTask>().InsertOneAsync(apiTask);
 
             return CreatedAtRoute("GetApiTask", new { id = apiTask.Id.ToString() }, apiTask);
+        }
+
+        private ApiTaskReportItem GenerateItem(string name, NewmanStatsItems statsItem)
+        {
+            var item = new ApiTaskReportItem
+            {
+                Name = name,
+                Total = statsItem.Total,
+                Pending = statsItem.Pending,
+                Failed = statsItem.Failed
+            };
+
+            return item;
         }
     }
 }

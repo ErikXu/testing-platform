@@ -16,7 +16,7 @@
     </el-card>
     <h3>{{ $t('Api List') }}</h3>
     <el-table
-      :data="report && report.items"
+      :data="report && report.apiItems"
       border
       fit
       highlight-current-row
@@ -26,7 +26,7 @@
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('Method')" align="left">
+      <el-table-column :label="$t('Method')" align="left" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.method }}</span>
         </template>
@@ -36,14 +36,42 @@
           <span>{{ scope.row.url }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('Response')" align="left">
+      <el-table-column :label="$t('Response')" align="left" width="140">
         <template slot-scope="scope">
-          <span>{{ scope.row.code }} + {{ scope.row.status }}</span>
+          <span>{{ scope.row.code }} {{ scope.row.status }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('ResponseTime')" align="left">
+      <el-table-column :label="$t('ResponseTime')" align="left" width="140">
         <template slot-scope="scope">
           <span>{{ scope.row.responseTime + "ms" }}</span>
+        </template>
+      </el-table-column>
+    </el-table>
+    <h3>{{ $t('Report') }}</h3>
+    <el-table
+      :data="report && report.reportItems"
+      border
+      fit
+      highlight-current-row
+    >
+      <el-table-column :label="$t('Name')" align="left">
+        <template slot-scope="scope">
+          <span>{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('Total')" align="left">
+        <template slot-scope="scope">
+          <span>{{ scope.row.total }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('Pending')" align="left">
+        <template slot-scope="scope">
+          <span>{{ scope.row.pending }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('Failed')" align="left">
+        <template slot-scope="scope">
+          <span>{{ scope.row.failed }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -85,7 +113,11 @@ export default {
     "Method": "Method",
     "Url": "Url",
     "Response": "Response",
-    "ResponseTime": "ResponseTime"
+    "ResponseTime": "ResponseTime",
+    "Report": "Report",
+    "Total": "Total",
+    "Pending": "Pending",
+    "Failed": "Failed"
   },
   "zh": {
     "Scene Details": "场景信息",
@@ -94,7 +126,11 @@ export default {
     "Method": "Method",
     "Url": "Url",
     "Response": "响应",
-    "ResponseTime": "响应时间"
+    "ResponseTime": "响应时间",
+    "Report": "报告详情",
+    "Total": "总数",
+    "Pending": "等待",
+    "Failed": "失败"
   }
 }
 </i18n>
