@@ -1,6 +1,9 @@
 <template>
   <div class="app-container">
-    <h3>{{ $t('Scene Details') }}</h3>
+    <h3 style="margin-bottom:0px;">{{ $t('Scene Details') }}</h3>
+    <el-row type="flex" style="margin-bottom:10px;" justify="end">
+      <el-button type="primary" size="mini" @click="back">{{ $t('Back') }}</el-button>
+    </el-row>
     <el-card class="box-card">
       <el-form label-width="40%" size="mini">
         <el-form-item :label="$t('Id')">
@@ -26,7 +29,10 @@
         </el-form-item>
       </el-form>
     </el-card>
-    <h3>{{ $t('Task List') }}</h3>
+    <h3 style="margin-bottom:0px;">{{ $t('Task List') }}</h3>
+    <el-row type="flex" style="margin-bottom:10px;" justify="end">
+      <el-button type="primary" size="mini" @click="refresh">{{ $t('Refresh') }}</el-button>
+    </el-row>
     <el-table
       :data="tasks"
       border
@@ -127,6 +133,12 @@ export default {
     monitor(row) {
       var url = window.location.protocol + '//' + window.location.hostname + ':8080/?id=' + row.id
       window.open(url)
+    },
+    refresh() {
+      this.fetchData()
+    },
+    back() {
+      this.$router.push({ name: 'stress-scene' })
     }
   }
 }
@@ -156,7 +168,9 @@ export default {
     "Waiting": "Waiting",
     "Runing": "Runing",
     "Done": "Done",
-    "Error": "Error"
+    "Error": "Error",
+    "Refresh": "Refresh",
+    "Back": "Back"
   },
   "zh": {
     "Scene Details": "场景详情",
@@ -180,7 +194,9 @@ export default {
     "Waiting": "等待中",
     "Runing": "运行中",
     "Done": "已完成",
-    "Error": "已失败"
+    "Error": "已失败",
+    "Refresh": "刷新",
+    "Back": "返回"
   }
 }
 </i18n>

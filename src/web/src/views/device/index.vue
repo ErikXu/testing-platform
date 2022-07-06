@@ -24,7 +24,7 @@
       </el-form>
     </el-card>
     <el-row type="flex" style="margin-top:10px;" justify="end">
-      <el-button type="primary" icon="el-icon-refresh" @click="refresh">{{ $t('Refresh') }}</el-button>
+      <el-button type="primary" @click="refresh">{{ $t('Refresh') }}</el-button>
     </el-row>
   </div>
 </template>

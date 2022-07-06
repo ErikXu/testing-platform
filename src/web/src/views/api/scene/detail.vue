@@ -1,6 +1,9 @@
 <template>
   <div class="app-container">
-    <h3>{{ $t('Scene Details') }}</h3>
+    <h3 style="margin-bottom:0px;">{{ $t('Scene Details') }}</h3>
+    <el-row type="flex" style="margin-bottom:10px;" justify="end">
+      <el-button type="primary" size="mini" @click="back">{{ $t('Back') }}</el-button>
+    </el-row>
     <el-card class="box-card">
       <el-form label-width="40%" size="mini">
         <el-form-item :label="$t('Id')">
@@ -107,13 +110,15 @@
     >
       <el-button type="primary" size="mini" style="margin-top:8px;">{{ $t('Upload') }}</el-button>
     </el-upload>
-    <h3>{{ $t('Task List') }}</h3>
+    <h3 style="margin-bottom:0px;">{{ $t('Task List') }}</h3>
+    <el-row type="flex" style="margin-bottom:10px;" justify="end">
+      <el-button type="primary" size="mini" @click="refresh">{{ $t('Refresh') }}</el-button>
+    </el-row>
     <el-table
       :data="tasks"
       border
       fit
       highlight-current-row
-      style="margin-top:10px;"
     >
       <el-table-column label="#" align="center" width="55">
         <template slot-scope="scope">
@@ -191,6 +196,12 @@ export default {
     },
     report(row) {
       this.$router.push({ name: 'api-task-report', params: { id: row.id }})
+    },
+    refresh() {
+      this.fetchData()
+    },
+    back() {
+      this.$router.push({ name: 'api-scene' })
     }
   }
 }
@@ -222,7 +233,9 @@ export default {
     "Waiting": "Waiting",
     "Runing": "Runing",
     "Done": "Done",
-    "Error": "Error"
+    "Error": "Error",
+    "Refresh": "Refresh",
+    "Back": "Back"
   },
   "zh": {
     "Scene Details": "场景详情",
@@ -248,7 +261,9 @@ export default {
     "Waiting": "等待中",
     "Runing": "运行中",
     "Done": "已完成",
-    "Error": "已失败"
+    "Error": "已失败",
+    "Refresh": "刷新",
+    "Back": "返回"
   }
 }
 </i18n>
