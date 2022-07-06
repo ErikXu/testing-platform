@@ -85,7 +85,7 @@ namespace WebApi.Controllers
                     };
 
                     var host = string.Join('.', item.Request.Url.Host);
-                    var path = string.Join('/', item.Request.Url.Path).Trim('/');
+                    var path = string.Join('/', item.Request.Url.Path);
                     apiItem.Url = $"{item.Request.Url.Protocol}://{host}/{path}";
 
                     report.ApiItems.Add(apiItem);
