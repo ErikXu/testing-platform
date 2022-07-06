@@ -16,6 +16,8 @@ namespace WebApi.Mongo.Entities
 
         public ApiTaskStatus Status { get; set; }
 
+        public ApiTaskFrom From { get; set; }
+
         public string Command { get; set; }
 
         public string Message { get; set; }
@@ -23,6 +25,8 @@ namespace WebApi.Mongo.Entities
         public NewmanResult Result { get; set; }
 
         public bool IsSuccess { get; set; }
+
+        public string Caller { get; set; }
 
         public DateTime StartRunningTime { get; set; }
 
@@ -40,6 +44,13 @@ namespace WebApi.Mongo.Entities
         Done = 2,
 
         Error = 3
+    }
+
+    public enum ApiTaskFrom
+    {
+        Console = 0,
+
+        Callback = 1
     }
 
     public class NewmanResult

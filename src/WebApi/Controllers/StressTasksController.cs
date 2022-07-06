@@ -38,7 +38,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Get stress task by id
         /// </summary>
-        [HttpGet("{id}", Name = "GetTask")]
+        [HttpGet("{id}", Name = "GetStressTask")]
         public async Task<IActionResult> Get([FromRoute] string id)
         {
             var task = await _mongoDbContext.Collection<StressTask>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
@@ -123,12 +123,13 @@ namespace WebApi.Controllers
                 Duration = scene.Duration,
                 Unit = scene.Unit,
                 Status = StressTaskStatus.Queue,
+                From = StressTaskFrom.Console,
                 CreationTime = DateTime.UtcNow
             };
 
             await _mongoDbContext.Collection<StressTask>().InsertOneAsync(task);
 
-            return CreatedAtRoute("GetTask", new { id = task.Id.ToString() }, task);
+            return CreatedAtRoute("GetStressTask", new { id = task.Id.ToString() }, task);
         }
 
         [HttpPatch("{id}/baseline")]

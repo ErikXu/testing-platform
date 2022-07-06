@@ -123,6 +123,17 @@ export const constantRoutes = [
     ]
   },
 
+  {
+    path: '/callback',
+    component: Layout,
+    children: [{
+      path: 'callback',
+      name: 'Callback',
+      component: () => import('@/views/callback/index'),
+      meta: { title: 'Callback', icon: 'el-icon-position' }
+    }]
+  },
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

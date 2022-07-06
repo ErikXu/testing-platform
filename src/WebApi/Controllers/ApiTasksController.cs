@@ -148,6 +148,7 @@ namespace WebApi.Controllers
                 Collection = apiScene.Collection,
                 Environment = apiScene.Environment,
                 Status = ApiTaskStatus.Queue,
+                From = ApiTaskFrom.Console,
                 CreationTime = DateTime.UtcNow
             };
 

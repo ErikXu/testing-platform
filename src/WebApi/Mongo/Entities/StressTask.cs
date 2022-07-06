@@ -25,6 +25,8 @@ namespace WebApi.Mongo.Entities
 
         public StressTaskStatus Status { get; set; }
 
+        public StressTaskFrom From { get; set; }
+
         public Device Device { get; set; }
 
         public string Script { get; set; }
@@ -36,6 +38,8 @@ namespace WebApi.Mongo.Entities
         public bool IsBaseline { get; set; }
 
         public TaskResult Result { get; set; }
+
+        public string Caller { get; set; }
 
         public DateTime StartRunningTime { get; set; }
 
@@ -53,6 +57,13 @@ namespace WebApi.Mongo.Entities
         Done = 2,
 
         Error = 3
+    }
+
+    public enum StressTaskFrom
+    {
+        Console = 0,
+
+        Callback = 1
     }
 
     public class TaskResult
