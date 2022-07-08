@@ -99,8 +99,6 @@ export default {
   "en": {
     "Device": "Device",
     "Stress Test": "Stress Test",
-    "Scene": "Scene",
-    "Task": "Task",
     "Api Test": "Api Test",
     "Scene": "Scene",
     "Task": "Task",
@@ -109,13 +107,10 @@ export default {
   "zh": {
     "Device": "设备",
     "Stress Test": "压力测试",
-    "Scene": "场景",
-    "Task": "人物",
     "Api Test": "API 测试",
     "Scene": "场景",
     "Task": "任务",
     "Callback": "回调"
   }
 }
-
 </i18n>
