@@ -5,10 +5,13 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApi.Mongo;
 using WebApi.Mongo.Entities;
+using WebApi.Services;
 
 namespace WebApi.HostedServices
 {
@@ -19,12 +22,17 @@ namespace WebApi.HostedServices
         private readonly ILogger<GenerateSchedule> _logger;
         private readonly MongoDbContext _mongoDbContext;
         private IMemoryCache _cache;
+        private readonly ICommandService _commandService;
 
-        public GenerateSchedule(ILogger<GenerateSchedule> logger, MongoDbContext mongoDbContext, IMemoryCache cache)
+        public GenerateSchedule(ILogger<GenerateSchedule> logger,
+                                MongoDbContext mongoDbContext,
+                                IMemoryCache cache,
+                                ICommandService commandService)
         {
             _logger = logger;
             _mongoDbContext = mongoDbContext;
             _cache = cache;
+            _commandService = commandService;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -44,11 +52,42 @@ namespace WebApi.HostedServices
                 return;
             }
 
-            var list = _mongoDbContext.Collection<Schedule>().AsQueryable().Where(n => !n.IsDisabled).ToList();
+            var schedules = _mongoDbContext.Collection<Schedule>().AsQueryable().Where(n => !n.IsDisabled).ToList();
 
-            if (list.Count > 0)
+            try
             {
+                var baseCrons = File.ReadAllText("/var/spool/cron/crontabs/root.bak");
 
+                var crons = new StringBuilder();
+                crons.Append(baseCrons);
+
+                if (schedules.Count > 0)
+                {
+                    foreach (var schedule in schedules)
+                    {
+                        if (schedule.TestType == TestType.Api)
+                        {
+                            crons.AppendLine($"{schedule.Cron} curl http://localhost/api/schedules/api-test?sceneId={schedule.SceneId}");
+                        }
+
+                        if (schedule.TestType == TestType.Stress)
+                        {
+                            crons.AppendLine($"{schedule.Cron} curl http://localhost/api/schedules/stress-test?sceneId={schedule.SceneId}");
+                        }
+                    }
+                }
+
+                File.Delete("/var/spool/cron/crontabs/root");
+                File.WriteAllText("/var/spool/cron/crontabs/root", crons.ToString());
+
+                _commandService.ExecuteCommand("crontab -r");
+
+                queue.Dequeue();
+                _cache.Set(Program.ScheduleQueueKey, queue);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
             }
         }
 

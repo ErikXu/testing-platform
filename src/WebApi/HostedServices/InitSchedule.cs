@@ -62,7 +62,6 @@ namespace WebApi.HostedServices
                 File.WriteAllText("/var/spool/cron/crontabs/root", crons.ToString());
 
                 _commandService.ExecuteCommand("crond");
-
             }
             catch (Exception ex)
             {
