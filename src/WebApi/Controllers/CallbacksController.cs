@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using WebApi.Mongo;
 using WebApi.Mongo.Entities;
+using WebApi.Services;
 
 namespace WebApi.Controllers
 {
@@ -13,10 +14,12 @@ namespace WebApi.Controllers
     public class CallbacksController : ControllerBase
     {
         private readonly MongoDbContext _mongoDbContext;
+        private readonly IApiTaskService _apiTaskService;
 
-        public CallbacksController(MongoDbContext mongoDbContext)
+        public CallbacksController(MongoDbContext mongoDbContext, IApiTaskService apiTaskService)
         {
             _mongoDbContext = mongoDbContext;
+            _apiTaskService = apiTaskService;
         }
 
         /// <summary>
@@ -124,28 +127,7 @@ namespace WebApi.Controllers
                 return BadRequest("Api test callback is not enabled!");
             }
 
-            var apiScene = await _mongoDbContext.Collection<ApiScene>().Find(n => n.Id == new ObjectId(sceneId)).SingleOrDefaultAsync();
-
-            if (apiScene == null)
-            {
-                return NotFound();
-            }
-
-            var apiTask = new ApiTask
-            {
-                SceneId = apiScene.Id,
-                SceneName = apiScene.Name,
-                Collection = apiScene.Collection,
-                Environment = apiScene.Environment,
-                Status = ApiTaskStatus.Queue,
-                From = ApiTaskFrom.Callback,
-                Caller = caller,
-                CreationTime = DateTime.UtcNow
-            };
-
-            await _mongoDbContext.Collection<ApiTask>().InsertOneAsync(apiTask);
-
-            return CreatedAtRoute("GetApiTask", new { id = apiTask.Id.ToString() }, apiTask);
+            return await _apiTaskService.CreateApiTask(sceneId, ApiTaskFrom.Callback);
         }
 
         /// <summary>

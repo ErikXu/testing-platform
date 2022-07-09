@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using System;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -16,11 +17,15 @@ namespace WebApi.HostedServices
     {
         private readonly ILogger<InitSchedule> _logger;
         private readonly MongoDbContext _mongoDbContext;
+        private readonly ICommandService _commandService;
 
-        public InitSchedule(ILogger<InitSchedule> logger, MongoDbContext mongoDbContext)
+        public InitSchedule(ILogger<InitSchedule> logger, 
+                            MongoDbContext mongoDbContext,
+                            ICommandService commandService)
         {
             _logger = logger;
             _mongoDbContext = mongoDbContext;
+            _commandService = commandService;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -33,18 +38,28 @@ namespace WebApi.HostedServices
                 return Task.CompletedTask;
             }
 
-            var baseCrons = File.ReadAllText("/var/spool/cron/crontabs/root.bak");
-
-            var crons = new StringBuilder();
-            crons.Append(baseCrons);
-
-            foreach (var schedule in schedules)
+            try
             {
-                crons.AppendLine($"*       *       *       *       *       curl http://localhost/{schedule.SceneId}");
-            }
+                var baseCrons = File.ReadAllText("/var/spool/cron/crontabs/root.bak");
 
-            File.Delete("/var/spool/cron/crontabs/root");
-            File.WriteAllText("/var/spool/cron/crontabs/root", crons.ToString());
+                var crons = new StringBuilder();
+                crons.Append(baseCrons);
+
+                foreach (var schedule in schedules)
+                {
+                    crons.AppendLine($"*       *       *       *       *       curl http://localhost/api/schedules/api-test?sceneId={schedule.SceneId}");
+                }
+
+                File.Delete("/var/spool/cron/crontabs/root");
+                File.WriteAllText("/var/spool/cron/crontabs/root", crons.ToString());
+
+                _commandService.ExecuteCommand("crond");
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
 
             return Task.CompletedTask;
         }

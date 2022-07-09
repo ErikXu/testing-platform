@@ -55,6 +55,7 @@ namespace WebApi
             services.AddSingleton<IParseService, ParseService>();
             services.AddSingleton<ICommandService, CommandService>();
             services.AddSingleton<IDeviceService, DeviceService>();
+            services.AddSingleton<IApiTaskService, ApiTaskService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

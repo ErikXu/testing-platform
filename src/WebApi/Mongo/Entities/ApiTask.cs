@@ -50,7 +50,9 @@ namespace WebApi.Mongo.Entities
     {
         Console = 0,
 
-        Callback = 1
+        Callback = 1,
+
+        Schedule = 2
     }
 
     public class NewmanResult

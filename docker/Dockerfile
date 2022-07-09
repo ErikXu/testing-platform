@@ -13,7 +13,8 @@ RUN apk add --no-cache \
         libssl1.1 \
         libstdc++ \
         zlib \
-        tini
+        tini \
+        curl
 
 # Backup base crontabs
 RUN cp /var/spool/cron/crontabs/root /var/spool/cron/crontabs/root.bak

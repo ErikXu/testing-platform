@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WebApi.Models;
 using WebApi.Mongo;
 using WebApi.Mongo.Entities;
+using WebApi.Services;
 
 namespace WebApi.Controllers
 {
@@ -17,11 +18,13 @@ namespace WebApi.Controllers
     {
         private readonly MongoDbContext _mongoDbContext;
         private IMemoryCache _cache;
+        private readonly IApiTaskService _apiTaskService;
 
-        public SchedulesController(MongoDbContext mongoDbContext, IMemoryCache cache)
+        public SchedulesController(MongoDbContext mongoDbContext, IMemoryCache cache, IApiTaskService apiTaskService)
         {
             _mongoDbContext = mongoDbContext;
             _cache = cache;
+            _apiTaskService = apiTaskService;
         }
 
         /// <summary>
@@ -106,6 +109,15 @@ namespace WebApi.Controllers
             Enqueue(schedule.Id.ToString());
 
             return CreatedAtRoute("GetSchedule", new { id = schedule.Id.ToString() }, schedule);
+        }
+
+        /// <summary>
+        /// Schedule to run api test
+        /// </summary>
+        [HttpGet("api-test")]
+        public async Task<IActionResult> CallbackApiTest([FromQuery] string sceneId)
+        {
+            return await _apiTaskService.CreateApiTask(sceneId, ApiTaskFrom.Schedule);
         }
 
         private void Enqueue(string scheduleId)
