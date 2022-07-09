@@ -45,8 +45,12 @@ namespace WebApi
             // https://www.c-sharpcorner.com/article/getting-started-with-vue-js-and-net-core-32/
             services.AddSpaStaticFiles(options => options.RootPath = "web");
 
+            services.AddMemoryCache();
+
             services.AddHostedService<RunStressTest>();
             services.AddHostedService<RunApiTest>();
+            services.AddHostedService<InitSchedule>();
+            services.AddHostedService<GenerateSchedule>();
 
             services.AddSingleton<IParseService, ParseService>();
             services.AddSingleton<ICommandService, CommandService>();

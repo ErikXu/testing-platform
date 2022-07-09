@@ -15,6 +15,9 @@ RUN apk add --no-cache \
         zlib \
         tini
 
+# Backup base crontabs
+RUN cp /var/spool/cron/crontabs/root /var/spool/cron/crontabs/root.bak
+
 # Api test tool newman
 RUN apk add nodejs npm
 RUN npm install --global newman@5.3.1

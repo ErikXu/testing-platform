@@ -13,6 +13,10 @@ namespace WebApi
 
         public static string TempFolder { get; } = "/tmp";
 
+        public static string ScheduleIsInitedKey { get; } = "ScheduleIsInited";
+
+        public static string ScheduleQueueKey { get; } = "ScheduleQueue";
+
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();

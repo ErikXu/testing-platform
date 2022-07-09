@@ -103,25 +103,25 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromQuery] string sceneId)
         {
-            var scene = await _mongoDbContext.Collection<StressScene>()
+            var stressScene = await _mongoDbContext.Collection<StressScene>()
                                              .Find(n => n.Id == new ObjectId(sceneId))
                                              .SingleOrDefaultAsync();
 
-            if (scene == null)
+            if (stressScene == null)
             {
                 return NotFound();
             }
 
             var task = new StressTask
             {
-                SceneId = scene.Id,
-                SceneName = scene.Name,
-                Url = scene.Url,
-                Method = scene.Method,
-                Thread = scene.Thread,
-                Connection = scene.Connection,
-                Duration = scene.Duration,
-                Unit = scene.Unit,
+                SceneId = stressScene.Id,
+                SceneName = stressScene.Name,
+                Url = stressScene.Url,
+                Method = stressScene.Method,
+                Thread = stressScene.Thread,
+                Connection = stressScene.Connection,
+                Duration = stressScene.Duration,
+                Unit = stressScene.Unit,
                 Status = StressTaskStatus.Queue,
                 From = StressTaskFrom.Console,
                 CreationTime = DateTime.UtcNow

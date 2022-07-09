@@ -25,6 +25,7 @@ namespace WebApi.HostedServices
             _mongoDbContext = mongoDbContext;
 
         }
+
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("[Run api test hosted service] is running...");
