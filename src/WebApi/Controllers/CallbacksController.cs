@@ -15,11 +15,15 @@ namespace WebApi.Controllers
     {
         private readonly MongoDbContext _mongoDbContext;
         private readonly IApiTaskService _apiTaskService;
+        private readonly IStressTaskService _stressTaskService;
 
-        public CallbacksController(MongoDbContext mongoDbContext, IApiTaskService apiTaskService)
+        public CallbacksController(MongoDbContext mongoDbContext, 
+                                   IApiTaskService apiTaskService, 
+                                   IStressTaskService stressTaskService)
         {
             _mongoDbContext = mongoDbContext;
             _apiTaskService = apiTaskService;
+            _stressTaskService = stressTaskService;
         }
 
         /// <summary>
@@ -58,34 +62,7 @@ namespace WebApi.Controllers
                 return BadRequest("Stress test callback is not enabled!");
             }
 
-            var scene = await _mongoDbContext.Collection<StressScene>()
-                                             .Find(n => n.Id == new ObjectId(sceneId))
-                                             .SingleOrDefaultAsync();
-
-            if (scene == null)
-            {
-                return NotFound();
-            }
-
-            var task = new StressTask
-            {
-                SceneId = scene.Id,
-                SceneName = scene.Name,
-                Url = scene.Url,
-                Method = scene.Method,
-                Thread = scene.Thread,
-                Connection = scene.Connection,
-                Duration = scene.Duration,
-                Unit = scene.Unit,
-                Status = StressTaskStatus.Queue,
-                From = StressTaskFrom.Callback,
-                Caller = caller,
-                CreationTime = DateTime.UtcNow
-            };
-
-            await _mongoDbContext.Collection<StressTask>().InsertOneAsync(task);
-
-            return CreatedAtRoute("GetStressTask", new { id = task.Id.ToString() }, task);
+            return await _stressTaskService.CreateStressTask(sceneId, StressTaskFrom.Callback);
         }
 
         /// <summary>

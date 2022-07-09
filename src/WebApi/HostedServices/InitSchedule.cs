@@ -47,7 +47,15 @@ namespace WebApi.HostedServices
 
                 foreach (var schedule in schedules)
                 {
-                    crons.AppendLine($"*       *       *       *       *       curl http://localhost/api/schedules/api-test?sceneId={schedule.SceneId}");
+                    if (schedule.TestType == TestType.Api)
+                    {
+                        crons.AppendLine($"{schedule.Cron} curl http://localhost/api/schedules/api-test?sceneId={schedule.SceneId}");
+                    }
+
+                    if (schedule.TestType == TestType.Stress)
+                    {
+                        crons.AppendLine($"{schedule.Cron} curl http://localhost/api/schedules/stress-test?sceneId={schedule.SceneId}");
+                    }
                 }
 
                 File.Delete("/var/spool/cron/crontabs/root");

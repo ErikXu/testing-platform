@@ -19,12 +19,16 @@ namespace WebApi.Controllers
         private readonly MongoDbContext _mongoDbContext;
         private IMemoryCache _cache;
         private readonly IApiTaskService _apiTaskService;
-
-        public SchedulesController(MongoDbContext mongoDbContext, IMemoryCache cache, IApiTaskService apiTaskService)
+        private readonly IStressTaskService _stressTaskService;
+        public SchedulesController(MongoDbContext mongoDbContext, 
+                                   IMemoryCache cache, 
+                                   IApiTaskService apiTaskService,
+                                   IStressTaskService stressTaskService)
         {
             _mongoDbContext = mongoDbContext;
             _cache = cache;
             _apiTaskService = apiTaskService;
+            _stressTaskService = stressTaskService;
         }
 
         /// <summary>
@@ -115,9 +119,18 @@ namespace WebApi.Controllers
         /// Schedule to run api test
         /// </summary>
         [HttpGet("api-test")]
-        public async Task<IActionResult> CallbackApiTest([FromQuery] string sceneId)
+        public async Task<IActionResult> CreateApiTest([FromQuery] string sceneId)
         {
             return await _apiTaskService.CreateApiTask(sceneId, ApiTaskFrom.Schedule);
+        }
+
+        /// <summary>
+        /// Schedule to run stress test
+        /// </summary>
+        [HttpGet("stress-test")]
+        public async Task<IActionResult> CreateStressTest([FromQuery] string sceneId)
+        {
+            return await _stressTaskService.CreateStressTask(sceneId, StressTaskFrom.Schedule);
         }
 
         private void Enqueue(string scheduleId)

@@ -8,6 +8,7 @@ using WebApi.Models;
 using WebApi.Mongo;
 using WebApi.Mongo.Entities;
 using System.Linq;
+using WebApi.Services;
 
 namespace WebApi.Controllers
 {
@@ -16,10 +17,12 @@ namespace WebApi.Controllers
     public class StressTasksController : ControllerBase
     {
         private readonly MongoDbContext _mongoDbContext;
+        private readonly IStressTaskService _stressTaskService;
 
-        public StressTasksController(MongoDbContext mongoDbContext)
+        public StressTasksController(MongoDbContext mongoDbContext, IStressTaskService stressTaskService)
         {
             _mongoDbContext = mongoDbContext;
+            _stressTaskService = stressTaskService;
         }
 
         /// <summary>
@@ -103,33 +106,12 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromQuery] string sceneId)
         {
-            var stressScene = await _mongoDbContext.Collection<StressScene>()
-                                             .Find(n => n.Id == new ObjectId(sceneId))
-                                             .SingleOrDefaultAsync();
+            return await NewMethod(sceneId);
+        }
 
-            if (stressScene == null)
-            {
-                return NotFound();
-            }
-
-            var task = new StressTask
-            {
-                SceneId = stressScene.Id,
-                SceneName = stressScene.Name,
-                Url = stressScene.Url,
-                Method = stressScene.Method,
-                Thread = stressScene.Thread,
-                Connection = stressScene.Connection,
-                Duration = stressScene.Duration,
-                Unit = stressScene.Unit,
-                Status = StressTaskStatus.Queue,
-                From = StressTaskFrom.Console,
-                CreationTime = DateTime.UtcNow
-            };
-
-            await _mongoDbContext.Collection<StressTask>().InsertOneAsync(task);
-
-            return CreatedAtRoute("GetStressTask", new { id = task.Id.ToString() }, task);
+        private async Task<IActionResult> NewMethod(string sceneId)
+        {
+            return await _stressTaskService.CreateStressTask(sceneId, StressTaskFrom.Console);
         }
 
         [HttpPatch("{id}/baseline")]
