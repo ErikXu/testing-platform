@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebApi.Mongo;
 using WebApi.Mongo.Entities;
+using WebApi.Services;
 
 namespace WebApi.HostedServices
 {
@@ -18,12 +19,15 @@ namespace WebApi.HostedServices
 
         private readonly ILogger<RunApiTest> _logger;
         private readonly MongoDbContext _mongoDbContext;
+        private readonly ICommandService _commandService;
 
-        public RunApiTest(ILogger<RunApiTest> logger, MongoDbContext mongoDbContext)
+        public RunApiTest(ILogger<RunApiTest> logger, 
+                        MongoDbContext mongoDbContext,
+                        ICommandService commandService)
         {
             _logger = logger;
             _mongoDbContext = mongoDbContext;
-
+            _commandService = commandService;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -78,7 +82,7 @@ namespace WebApi.HostedServices
 
                 apiTask.Command = command;
 
-                var (code, message) = ExecuteCommand(command);
+                var (code, message) = _commandService.ExecuteCommand(command);
 
                 if (code != 0)
                 {
@@ -104,35 +108,6 @@ namespace WebApi.HostedServices
             apiTask.EndRunningTime = DateTime.UtcNow;
             _mongoDbContext.Collection<ApiTask>().FindOneAndReplace(n => n.Id == apiTask.Id, apiTask);
         }
-
-        private static (int, string) ExecuteCommand(string command)
-        {
-            var escapedArgs = command.Replace("\"", "\\\"");
-            var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "/bin/sh",
-                    Arguments = $"-c \"{escapedArgs}\"",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
-            };
-
-            process.Start();
-            process.WaitForExit();
-
-            var message = process.StandardOutput.ReadToEnd();
-            if (process.ExitCode != 0)
-            {
-                message = process.StandardError.ReadToEnd();
-            }
-
-            return (process.ExitCode, message);
-        }
-
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
