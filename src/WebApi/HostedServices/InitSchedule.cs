@@ -33,13 +33,14 @@ namespace WebApi.HostedServices
             _logger.LogInformation("[Init schedule hosted service] is running...");
             var schedules = _mongoDbContext.Collection<Schedule>().AsQueryable().Where(n => !n.IsDisabled).ToList();
 
-            if (schedules.Count == 0)
-            {
-                return Task.CompletedTask;
-            }
-
             try
             {
+                if (schedules.Count == 0)
+                {
+                    _commandService.ExecuteCommand("crond");
+                    return Task.CompletedTask;
+                }
+
                 var baseCrons = File.ReadAllText("/var/spool/cron/crontabs/root.bak");
 
                 var crons = new StringBuilder();

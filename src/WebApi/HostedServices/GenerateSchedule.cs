@@ -80,8 +80,6 @@ namespace WebApi.HostedServices
                 File.Delete("/var/spool/cron/crontabs/root");
                 File.WriteAllText("/var/spool/cron/crontabs/root", crons.ToString());
 
-                _commandService.ExecuteCommand("crontab -r");
-
                 queue.Dequeue();
                 _cache.Set(Program.ScheduleQueueKey, queue);
             }
