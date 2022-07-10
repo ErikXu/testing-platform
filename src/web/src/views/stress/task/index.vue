@@ -26,7 +26,7 @@
           <el-tag v-else-if="scope.row.status === 3" type="danger" size="small">{{ $t('Error') }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('IsBaseline')" align="center" width="100">
+      <el-table-column :label="$t('Is Baseline')" align="center" width="100">
         <template slot-scope="scope">
           <el-switch v-model="scope.row.isBaseline" disabled />
         </template>
@@ -89,7 +89,7 @@ export default {
     "Stress Test Task": "Stress Test - Task",
     "Scene": "Scene",
     "Status": "Status",
-    "IsBaseline": "IsBaseline",
+    "Is Baseline": "Is Baseline",
     "StartTime": "StartTime",
     "EndTime": "EndTime",
     "CreationTime": "CreationTime",
@@ -104,7 +104,7 @@ export default {
     "Stress Test Task": "压力测试 - 任务",
     "Scene": "场景",
     "Status": "状态",
-    "IsBaseline": "基线版本",
+    "Is Baseline": "基线版本",
     "StartTime": "开始时间",
     "EndTime": "结束时间",
     "CreationTime": "创建时间",

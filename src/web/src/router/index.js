@@ -124,6 +124,17 @@ export const constantRoutes = [
   },
 
   {
+    path: '/schedule',
+    component: Layout,
+    children: [{
+      path: 'schedule',
+      name: 'Schedule',
+      component: () => import('@/views/schedule/index'),
+      meta: { title: 'Schedule', icon: 'el-icon-date' }
+    }]
+  },
+
+  {
     path: '/callback',
     component: Layout,
     children: [{

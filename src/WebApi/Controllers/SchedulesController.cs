@@ -115,6 +115,25 @@ namespace WebApi.Controllers
             return CreatedAtRoute("GetSchedule", new { id = schedule.Id.ToString() }, schedule);
         }
 
+        [HttpPatch("{id}/disabled")]
+        public async Task<IActionResult> SwitchDisabled([FromRoute] string id)
+        {
+            var schedule = await _mongoDbContext.Collection<Schedule>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
+            if (schedule == null)
+            {
+                return NotFound();
+            }
+
+            var filter = Builders<Schedule>.Filter.Where(a => a.Id == new ObjectId(id));
+            var update = Builders<Schedule>.Update.Set(n => n.IsDisabled, !schedule.IsDisabled);
+            await _mongoDbContext.Collection<Schedule>().FindOneAndUpdateAsync(filter, update);
+
+            Enqueue(schedule.Id.ToString());
+
+            return Ok();
+        }
+
+
         /// <summary>
         /// Schedule to run api test
         /// </summary>

@@ -102,6 +102,7 @@ export default {
     "Api Test": "Api Test",
     "Scene": "Scene",
     "Task": "Task",
+    "Schedule": "Schedule",
     "Callback": "Callback"
   },
   "zh": {
@@ -110,6 +111,7 @@ export default {
     "Api Test": "API 测试",
     "Scene": "场景",
     "Task": "任务",
+    "Schedule": "定时任务",
     "Callback": "回调"
   }
 }
