@@ -72,7 +72,7 @@
           <span>{{ scope.row.endRunningTime | simpleFormat }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('CreationTime')" align="left">
+      <el-table-column :label="$t('Creation Time')" align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.creationTime | simpleFormat }}</span>
         </template>
@@ -161,7 +161,7 @@ export default {
     "Is Baseline": "Is Baseline",
     "StartTime": "StartTime",
     "EndTime": "EndTime",
-    "CreationTime": "CreationTime",
+    "Creation Time": "Creation Time",
     "Monitor": "Monitor",
     "Report": "Report",
     "View": "View",
@@ -187,7 +187,7 @@ export default {
     "Is Baseline": "基线版本",
     "StartTime": "开始时间",
     "EndTime": "结束时间",
-    "CreationTime": "创建时间",
+    "Creation Time": "创建时间",
     "Monitor": "监控",
     "Report": "报告",
     "View": "查看",

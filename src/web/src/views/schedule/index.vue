@@ -39,7 +39,7 @@
           <el-switch v-model="scope.row.isDisabled" @change="switchDisabled(scope.row)" />
         </template>
       </el-table-column>
-      <el-table-column :label="$t('CreationTime')" align="left">
+      <el-table-column :label="$t('Creation Time')" align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.creationTime | simpleFormat }}</span>
         </template>
@@ -87,7 +87,7 @@ export default {
     "Api Test": "Api Test",
     "Cron Expression": "Cron Expression",
     "Disabled": "Disabled",
-    "CreationTime": "CreationTime"
+    "Creation Time": "Creation Time"
   },
   "zh": {
     "Schedule": "定时任务",
@@ -98,7 +98,7 @@ export default {
     "Api Test": "接口测试",
     "Cron Expression": "Cron 表达式",
     "Disabled": "禁用",
-    "CreationTime": "创建时间"
+    "Creation Time": "创建时间"
   }
 }
 </i18n>

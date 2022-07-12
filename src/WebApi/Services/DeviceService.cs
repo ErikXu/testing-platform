@@ -83,6 +83,20 @@
             return double.Parse(result);
         }
 
+        public int GetCpuCpuCacheSize()
+        {
+            var result = GetDevice("cat /proc/cpuinfo | grep -m1 'cache size' | awk -F':' '{print $2}'");
+
+            if (result == null)
+            {
+                return 0;
+            }
+
+            var value = result.ToLower().Replace("kb", string.Empty).Trim();
+
+            return int.Parse(value);
+        }
+
         private string GetDevice(string command)
         {
             try
@@ -102,20 +116,6 @@
             {
                 return null;
             }
-        }
-
-        public int GetCpuCpuCacheSize()
-        {
-            var result = GetDevice("cat /proc/cpuinfo | grep -m1 'cache size' | awk -F':' '{print $2}'");
-
-            if (result == null)
-            {
-                return 0;
-            }
-
-            var value = result.ToLower().Replace("kb", string.Empty).Trim();
-
-            return int.Parse(value);
         }
     }
 }

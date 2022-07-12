@@ -124,6 +124,17 @@ export const constantRoutes = [
   },
 
   {
+    path: '/agent',
+    component: Layout,
+    children: [{
+      path: 'agent',
+      name: 'Agent',
+      component: () => import('@/views/agent/index'),
+      meta: { title: 'Agent', icon: 'el-icon-location' }
+    }]
+  },
+
+  {
     path: '/schedule',
     component: Layout,
     children: [{
