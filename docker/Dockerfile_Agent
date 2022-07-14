@@ -1,0 +1,26 @@
+FROM alpine:3.14
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+
+RUN apk update
+
+# .Net dependency
+RUN apk add --no-cache \
+        ca-certificates \
+        krb5-libs \
+        libgcc \
+        libintl \
+        libssl1.1 \
+        libstdc++ \
+        zlib \
+        tini
+
+RUN echo 'http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories
+RUN apk add --update shellinabox
+
+COPY . /app
+WORKDIR /app
+EXPOSE 5001
+
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD ["/app/webapi", "--urls=http://*:5001"]
