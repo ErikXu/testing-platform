@@ -1,13 +1,14 @@
 <template>
   <div class="app-container">
     <h3>{{ $t('Stress Test') }}</h3>
-    <el-button size="mini" type="primary" @click="create">{{ $t('Create') }}</el-button>
+    <el-row type="flex" style="margin-bottom:10px;" justify="end">
+      <el-button size="mini" type="primary" @click="create">{{ $t('Create') }}</el-button>
+    </el-row>
     <el-table
       :data="list"
       border
       fit
       highlight-current-row
-      style="margin-top:10px;"
     >
       <el-table-column label="#" align="center" width="55">
         <template slot-scope="scope">
