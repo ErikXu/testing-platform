@@ -2,6 +2,7 @@
   <div class="app-container">
     <h3 style="margin-bottom:0px;">{{ $t('Scene Details') }}</h3>
     <el-row type="flex" style="margin-bottom:10px;" justify="end">
+      <el-button type="success" size="mini" @click="run">{{ $t('Run') }}</el-button>
       <el-button type="primary" size="mini" @click="back">{{ $t('Back') }}</el-button>
     </el-row>
     <el-card class="box-card">
@@ -100,7 +101,7 @@
 
 <script>
 import { getScene, getTaskOfScene } from '@/api/stress-scene'
-import { switchBaseline } from '@/api/stress-task'
+import { switchBaseline, addTask } from '@/api/stress-task'
 
 export default {
   data() {
@@ -137,6 +138,15 @@ export default {
     refresh() {
       this.fetchData()
     },
+    run() {
+      addTask(this.detail.id).then(() => {
+        this.$message({
+          type: 'success',
+          message: 'Run success!'
+        })
+        this.fetchData()
+      })
+    },
     back() {
       this.$router.push({ name: 'stress-scene' })
     }
@@ -170,6 +180,7 @@ export default {
     "Done": "Done",
     "Error": "Error",
     "Refresh": "Refresh",
+    "Run": "Run",
     "Back": "Back"
   },
   "zh": {
@@ -196,6 +207,7 @@ export default {
     "Done": "已完成",
     "Error": "已失败",
     "Refresh": "刷新",
+    "Run": "运行",
     "Back": "返回"
   }
 }

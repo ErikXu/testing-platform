@@ -157,8 +157,7 @@ export default {
       this.formVisible = true
     },
     run(row) {
-      addTask(row.id).then(response => {
-        this.list = response
+      addTask(row.id).then(() => {
         this.$message({
           type: 'success',
           message: 'Run success!'
