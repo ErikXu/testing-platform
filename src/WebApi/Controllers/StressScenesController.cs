@@ -35,6 +35,12 @@ namespace WebApi.Controllers
             { "h", "Hour" }
         };
 
+        private readonly Dictionary<string, string> _contentTypeDic = new Dictionary<string, string>
+        {
+            { "application/json", "application/json" },
+            { "application/x-www-form-urlencoded", "application/x-www-form-urlencoded" }
+        };
+
         public StressScenesController(MongoDbContext mongoDbContext, IMapper mapper)
         {
             _mongoDbContext = mongoDbContext;
@@ -58,6 +64,16 @@ namespace WebApi.Controllers
         public IActionResult UnitList()
         {
             var list = _uintDic.Select(n => new { Id = n.Key, Text = n.Value }).ToList();
+            return Ok(list);
+        }
+
+        /// <summary>
+        /// Get scene content-type list
+        /// </summary>
+        [HttpGet("content-type")]
+        public IActionResult ContentTypeList()
+        {
+            var list = _contentTypeDic.Select(n => new { Id = n.Key, Text = n.Value }).ToList();
             return Ok(list);
         }
 

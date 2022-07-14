@@ -19,6 +19,12 @@ namespace WebApi.Models
         /// <example>GET</example>
         public string Method { get; set; }
 
+        /// <summary>
+        /// ContentType
+        /// </summary>
+        /// <example>application/json</example>
+        public string ContentType { get; set; }
+
         public string Body { get; set; }
 
         /// <summary>

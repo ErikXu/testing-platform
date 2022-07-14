@@ -63,7 +63,7 @@
     </el-table>
 
     <el-dialog :title="$t('Scene')" :visible.sync="formVisible" @close="reset">
-      <el-form ref="sceneForm" :model="form" label-position="left" label-width="100px" style="width: 600px;" :rules="rules">
+      <el-form ref="sceneForm" :model="form" label-position="left" label-width="120px" style="width: 600px;" :rules="rules">
         <el-form-item :label="$t('Name')" prop="name">
           <el-input v-model="form.name" autocomplete="off" />
         </el-form-item>
@@ -81,6 +81,16 @@
           <el-col :span="19">
             <el-input v-model="form.url" autocomplete="off" />
           </el-col>
+        </el-form-item>
+        <el-form-item :label="$t('Content Type')" style="width:180px;">
+          <el-select v-model="form.contentType" style="width:180px;">
+            <el-option
+              v-for="contentType in contentTypeList"
+              :key="contentType.id"
+              :label="contentType.text"
+              :value="contentType.id"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item :label="$t('Thread')" style="width:180px;">
           <el-input-number v-model="form.thread" :min="1" />
@@ -111,7 +121,7 @@
 </template>
 
 <script>
-import { getMethodList, getUnitList, getSceneList, addScene } from '@/api/stress-scene'
+import { getMethodList, getUnitList, getContentTypeList, getSceneList, addScene } from '@/api/stress-scene'
 import { addTask } from '@/api/stress-task'
 
 export default {
@@ -121,12 +131,14 @@ export default {
       list: [],
       methodList: [],
       unitList: [],
+      contentTypeList: [],
       formVisible: false,
       submiting: false,
       form: {
         name: 'My Scene',
         url: 'http://localhost/api/tests/get',
         method: 'GET',
+        contentType: 'application/json',
         thread: 1,
         connection: 1,
         duration: 5,
@@ -141,10 +153,16 @@ export default {
   created() {
     getMethodList().then(response => {
       this.methodList = response
-      getUnitList().then(response => {
-        this.unitList = response
-      })
     })
+
+    getUnitList().then(response => {
+      this.unitList = response
+    })
+
+    getContentTypeList().then(response => {
+      this.contentTypeList = response
+    })
+
     this.fetchData()
   },
   methods: {

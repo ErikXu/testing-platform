@@ -10,6 +10,8 @@ namespace WebApi.Mongo.Entities
 
         public string Method { get; set; }
 
+        public string ContentType { get; set; }
+
         public string Body { get; set; }
 
         public int Thread { get; set; }

@@ -14,6 +14,13 @@ export function getUnitList() {
   })
 }
 
+export function getContentTypeList() {
+  return request({
+    url: '/api/stress-scenes/content-type',
+    method: 'get'
+  })
+}
+
 export function getSceneList() {
   return request({
     url: '/api/stress-scenes',
