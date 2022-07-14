@@ -162,12 +162,12 @@ namespace WebApi.HostedServices
         private string GenerateScript(StressTask task)
         {
             var script = new StringBuilder();
-            script.AppendLine($"wrk.method = \"{task.Method}\"");
-            script.AppendLine($"wrk.headers[\"Content-Type\"] = \"{task.ContentType}\"");
+            script.AppendLine($"wrk.method = '{task.Method}'");
+            script.AppendLine($"wrk.headers['Content-Type'] = '{task.ContentType}'");
 
             if (task.Method == Program.MethodPost || task.Method == Program.MethodPut || task.Method == Program.MethodPatch)
             {
-                script.AppendLine($"wrk.body = \"{task.Body ?? string.Empty}\"");
+                script.AppendLine($"wrk.body = '{task.Body ?? string.Empty}'");
             }
 
             task.Script = script.ToString();
