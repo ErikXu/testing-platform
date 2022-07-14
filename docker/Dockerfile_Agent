@@ -13,7 +13,8 @@ RUN apk add --no-cache \
         libssl1.1 \
         libstdc++ \
         zlib \
-        tini
+        tini \
+        htop
 
 RUN echo 'http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories
 RUN apk add --update shellinabox
