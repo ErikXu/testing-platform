@@ -11,26 +11,19 @@ namespace Agent.HostedServices
     public class StartShellinaboxd : IHostedService
     {
         private readonly ILogger<StartShellinaboxd> _logger;
-        private readonly IConfiguration _configuration;
 
-        public StartShellinaboxd(ILogger<StartShellinaboxd> logger, IConfiguration configuration)
+        public StartShellinaboxd(ILogger<StartShellinaboxd> logger)
         {
             _logger = logger;
-            _configuration = configuration;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("[Start shellinaboxd hosted service] is running...");
 
-            if (int.TryParse(_configuration["MonitorPort"], out var monitorPort))
-            {
-                monitorPort = 5002;
-            }
-
             try
             {
-                var (code, message) = ExecuteBackgroundCommand($"shellinaboxd -t -b -p {monitorPort} --no-beep -s '/:nobody:nogroup:/:htop -d 10'");
+                var (code, message) = ExecuteBackgroundCommand("shellinaboxd -t -b -p 5002 --no-beep -s '/:nobody:nogroup:/:htop -d 10'");
                 if (code != 0)
                 {
                     _logger.LogError(message);

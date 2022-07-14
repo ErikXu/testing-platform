@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE_NAME=${IMAGE_NAME:-agent}
+IMAGE_NAME=${IMAGE_NAME:-testing-agent}
 echo "IMAGE_NAME: "$IMAGE_NAME
 
 IMAGE_TAG=${IMAGE_TAG:-1.0.0}
