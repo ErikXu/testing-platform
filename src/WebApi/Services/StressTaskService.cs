@@ -39,6 +39,8 @@ namespace WebApi.Services
                 SceneName = stressScene.Name,
                 Url = stressScene.Url,
                 Method = stressScene.Method,
+                ContentType = stressScene.ContentType,
+                Body = stressScene.Body,
                 Thread = stressScene.Thread,
                 Connection = stressScene.Connection,
                 Duration = stressScene.Duration,

@@ -106,11 +106,6 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromQuery] string sceneId)
         {
-            return await NewMethod(sceneId);
-        }
-
-        private async Task<IActionResult> NewMethod(string sceneId)
-        {
             return await _stressTaskService.CreateStressTask(sceneId, StressTaskFrom.Console);
         }
 

@@ -19,6 +19,12 @@
         <el-form-item :label="$t('Method')">
           <span>{{ detail && detail.method }}</span>
         </el-form-item>
+        <el-form-item :label="$t('Content Type')">
+          <span>{{ detail && detail.contentType }}</span>
+        </el-form-item>
+        <el-form-item :label="$t('Body')">
+          <span>{{ detail && detail.body }}</span>
+        </el-form-item>
         <el-form-item :label="$t('Thread')">
           <span>{{ detail && detail.thread }}</span>
         </el-form-item>
@@ -169,6 +175,8 @@ export default {
     "Name": "Name:",
     "Url": "Url:",
     "Method": "Method:",
+    "Content Type": "Content Type:",
+    "Body": "Body:",
     "Thread": "Thread:",
     "Connection": "Connection:",
     "Duration": "Duration:",
@@ -199,6 +207,8 @@ export default {
     "Name": "名称:",
     "Url": "Url:",
     "Method": "Method:",
+    "Content Type": "Content Type:",
+    "Body": "Body:",
     "Thread": "线程数:",
     "Connection": "连接数:",
     "Duration": "持续时间:",

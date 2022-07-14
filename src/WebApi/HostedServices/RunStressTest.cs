@@ -163,11 +163,11 @@ namespace WebApi.HostedServices
         {
             var script = new StringBuilder();
             script.AppendLine($"wrk.method = \"{task.Method}\"");
-            script.AppendLine("wrk.headers[\"Content-Type\"] = \"application/json\"");
+            script.AppendLine($"wrk.headers[\"Content-Type\"] = \"{task.ContentType}\"");
 
             if (task.Method == Program.MethodPost || task.Method == Program.MethodPut || task.Method == Program.MethodPatch)
             {
-                script.AppendLine($"wrk.body = \"{task.Body}\"");
+                script.AppendLine($"wrk.body = \"{task.Body ?? string.Empty}\"");
             }
 
             task.Script = script.ToString();

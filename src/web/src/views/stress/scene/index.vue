@@ -31,8 +31,8 @@
         </template>
       </el-table-column>
       <el-table-column :label="$t('Body')" align="center" width="80">
-        <template>
-          <span>Body</span>
+        <template slot-scope="{row}">
+          <el-button type="text" @click="view(row)">{{ $t('View') }}</el-button>
         </template>
       </el-table-column>
       <el-table-column :label="$t('Thread')" align="center" width="80">
@@ -62,7 +62,7 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog :title="$t('Scene')" :visible.sync="formVisible" @close="reset">
+    <el-dialog :title="$t('Scene')" :visible.sync="formVisible">
       <el-form ref="sceneForm" :model="form" label-position="left" label-width="120px" style="width: 600px;" :rules="rules">
         <el-form-item :label="$t('Name')" prop="name">
           <el-input v-model="form.name" autocomplete="off" />
@@ -92,6 +92,9 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item :label="$t('Body')">
+          <el-input v-model="form.body" type="textarea" />
+        </el-form-item>
         <el-form-item :label="$t('Thread')" style="width:180px;">
           <el-input-number v-model="form.thread" :min="1" />
         </el-form-item>
@@ -117,12 +120,19 @@
         <el-button type="primary" :disabled="submiting" :loading="submiting" @click.native.prevent="submit">{{ $t('Submit') }}</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :title="$t('Body')" :visible.sync="bodyVisible">
+      <pre class="language-none">
+        <code>{{ body }}</code>
+      </pre>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getMethodList, getUnitList, getContentTypeList, getSceneList, addScene } from '@/api/stress-scene'
 import { addTask } from '@/api/stress-task'
+import 'prismjs/themes/prism-okaidia.css'
 
 export default {
   name: 'StressScene',
@@ -132,13 +142,16 @@ export default {
       methodList: [],
       unitList: [],
       contentTypeList: [],
+      body: '',
       formVisible: false,
+      bodyVisible: false,
       submiting: false,
       form: {
         name: 'My Scene',
         url: 'http://localhost/api/tests/get',
         method: 'GET',
         contentType: 'application/json',
+        body: '',
         thread: 1,
         connection: 1,
         duration: 5,
@@ -175,6 +188,10 @@ export default {
       this.submiting = false
       this.formVisible = true
     },
+    view(row) {
+      this.body = row.body
+      this.bodyVisible = true
+    },
     run(row) {
       addTask(row.id).then(() => {
         this.$message({
@@ -205,7 +222,6 @@ export default {
       })
     },
     reset() {
-      this.formVisible = false
       this.$refs.sceneForm.resetFields()
     }
   }
@@ -220,7 +236,9 @@ export default {
     "Name": "Name",
     "Url": "Url",
     "Method": "Method",
+    "Content Type": "Content Type",
     "Body": "Body",
+    "View": "View",
     "Thread": "Thread",
     "Connection": "Connection",
     "Duration": "Duration",
@@ -238,7 +256,9 @@ export default {
     "Name": "名称",
     "Url": "Url",
     "Method": "Method",
+    "Content Type": "Content Type",
     "Body": "Body",
+    "View": "查看",
     "Thread": "线程数",
     "Connection": "连接数",
     "Duration": "持续时间",
