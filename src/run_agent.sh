@@ -1,6 +1,6 @@
 #!/bin/bash
 docker rm -f testing-agent
-docker run --name testing-agent -d \
+docker run --name testing-agent -d --pid=host \
 -e SERVERDOMAIN="http://localhost:5000" \
 -e CLIENTADDRESS="127.0.0.1" \
 -e AGENTPORT=5001 \
