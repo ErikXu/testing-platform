@@ -22,6 +22,7 @@ namespace Agent
 
             services.AddHttpClient();
 
+            services.AddHostedService<StartShellinaboxd>();
             services.AddHostedService<SendHeartbeat>();
         }
 
