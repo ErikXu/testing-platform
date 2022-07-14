@@ -45,7 +45,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("heartbeat")]
-        public async Task<IActionResult> Heartbeat([FromQuery] string agentAddress)
+        public async Task<IActionResult> Heartbeat([FromQuery] string agentAddress, [FromQuery] int agentPort, [FromQuery] int monitorPort)
         {
             var agent = await _mongoDbContext.Collection<Agent>().Find(n => n.AgentAddress == agentAddress).SingleOrDefaultAsync();
 
@@ -56,6 +56,8 @@ namespace WebApi.Controllers
                 agent = new Agent
                 {
                     AgentAddress = agentAddress,
+                    AgentPort = agentPort,
+                    MonitorPort = monitorPort,
                     LastHeartbeat = now,
                     CreationTime = now
                 };

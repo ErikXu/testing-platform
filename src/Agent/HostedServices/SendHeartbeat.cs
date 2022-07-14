@@ -16,7 +16,7 @@ namespace Agent.HostedServices
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
 
-        public SendHeartbeat(ILogger<SendHeartbeat> logger, 
+        public SendHeartbeat(ILogger<SendHeartbeat> logger,
                              IHttpClientFactory httpClientFactory,
                              IConfiguration configuration)
         {
@@ -43,7 +43,17 @@ namespace Agent.HostedServices
                 var serverDomain = _configuration["ServerDomain"].Trim('/');
                 var clientAddress = _configuration["ClientAddress"];
 
-                var result = httpClient.GetAsync($"{serverDomain}/api/agents/heartbeat?agentAddress={clientAddress}").Result;
+                if (int.TryParse(_configuration["AgentPort"], out var agentPort))
+                {
+                    agentPort = 5001;
+                }
+
+                if (int.TryParse(_configuration["MonitorPort"], out var monitorPort))
+                {
+                    monitorPort = 5002;
+                }
+
+                var result = httpClient.GetAsync($"{serverDomain}/api/agents/heartbeat?agentAddress={clientAddress}&agentPort={agentPort}&monitorPort={monitorPort}").Result;
 
                 if (!result.IsSuccessStatusCode)
                 {

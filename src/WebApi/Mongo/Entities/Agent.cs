@@ -6,6 +6,10 @@ namespace WebApi.Mongo.Entities
     {
         public string AgentAddress { get; set; }
 
+        public int AgentPort { get; set; }
+
+        public int MonitorPort { get; set; }
+
         public DateTime LastHeartbeat { get; set; }
 
         public bool IsActive { get; set; }

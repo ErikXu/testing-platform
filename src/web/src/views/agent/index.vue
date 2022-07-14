@@ -18,6 +18,16 @@
           <span>{{ scope.row.agentAddress }}</span>
         </template>
       </el-table-column>
+      <el-table-column :label="$t('Port')" align="left">
+        <template slot-scope="{row}">
+          <span>{{ row.agentPort }} </span> <el-button type="text" style="padding: 0 0;" icon="el-icon-link" :disabled="!row.isActive" @click="view(row)" />
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('Monitor Port')" align="left">
+        <template slot-scope="{row}">
+          <span>{{ row.monitorPort }}</span> <el-button type="text" style="padding: 0 0;" icon="el-icon-link" :disabled="!row.isActive" @click="monitor(row)" />
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('Last Heartbeat')" align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.lastHeartbeat | simpleFormat }}</span>
@@ -56,6 +66,14 @@ export default {
       getAgentList().then(response => {
         this.list = response
       })
+    },
+    view(row) {
+      var url = 'http://' + row.agentAddress + ':' + row.agentPort + '/agent'
+      window.open(url)
+    },
+    monitor(row) {
+      var url = 'http://' + row.agentAddress + ':' + row.monitorPort
+      window.open(url)
     }
   }
 }
@@ -66,6 +84,8 @@ export default {
   "en": {
     "Agent": "Agent",
     "Address": "Address",
+    "Port": "Port",
+    "Monitor Port": "Monitor Port",
     "Last Heartbeat": "Last Heartbeat",
     "Is Active": "Is Active",
     "Creation Time": "Creation Time",
@@ -73,8 +93,10 @@ export default {
     "Inactive": "Inactive"
   },
   "zh": {
-    "Agent": "代理",
-    "Address": "地址",
+    "Agent": "代理终端",
+    "Address": "访问地址",
+    "Port": "访问端口",
+    "Monitor Port": "监控端口",
     "Last Heartbeat": "上次心跳",
     "Is Active": "是否活跃",
     "Creation Time": "创建时间",

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace Agent.Controllers
 {
@@ -10,13 +9,6 @@ namespace Agent.Controllers
     [ApiController]
     public class AgentController : ControllerBase
     {
-        private readonly ILogger<AgentController> _logger;
-
-        public AgentController(ILogger<AgentController> logger)
-        {
-            _logger = logger;
-        }
-
         /// <summary>
         /// Get device info
         /// </summary>
