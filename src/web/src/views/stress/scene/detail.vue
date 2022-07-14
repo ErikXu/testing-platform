@@ -45,7 +45,7 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column :label="$t('ID')" align="left" width="220">
+      <el-table-column :label="$t('ID')" align="left" width="210">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
@@ -58,7 +58,14 @@
           <el-tag v-else-if="scope.row.status === 3" type="danger" size="small">{{ $t('Error') }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('Is Baseline')" align="left" width="100">
+      <el-table-column :label="$t('From')" align="center" width="100">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.from === 0" type="primary" size="small">{{ $t('Console') }}</el-tag>
+          <el-tag v-else-if="scope.row.from === 1" type="primary" size="small">{{ $t('Callback') }}</el-tag>
+          <el-tag v-else-if="scope.row.from === 2" type="primary" size="small">{{ $t('Schedule') }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('Baseline')" align="center" width="80">
         <template slot-scope="scope">
           <el-switch v-model="scope.row.isBaseline" @change="switchBaseline(scope.row)" />
         </template>
@@ -78,7 +85,7 @@
           <span>{{ scope.row.creationTime | simpleFormat }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('Monitor')" align="center" width="90">
+      <el-table-column :label="$t('Monitor')" align="center" width="80">
         <template slot-scope="{row}">
           <el-button v-if="row.status === 1" type="success" size="mini" @click="monitor(row)">
             {{ $t('View') }}
@@ -88,7 +95,7 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('Report')" align="center" width="90">
+      <el-table-column :label="$t('Report')" align="center" width="80">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="report(row)">
             {{ $t('View') }}
@@ -168,7 +175,7 @@ export default {
     "Task List": "Task List",
     "ID": "ID",
     "Status": "Status",
-    "Is Baseline": "Is Baseline",
+    "Baseline": "Baseline",
     "StartTime": "StartTime",
     "EndTime": "EndTime",
     "Creation Time": "Creation Time",
@@ -181,7 +188,10 @@ export default {
     "Error": "Error",
     "Refresh": "Refresh",
     "Run": "Run",
-    "Back": "Back"
+    "Back": "Back",
+    "Console": "Console",
+    "Callback": "Callback",
+    "Schedule": "Schedule"
   },
   "zh": {
     "Scene Details": "场景详情",
@@ -195,7 +205,7 @@ export default {
     "Task List": "任务列表",
     "ID": "ID",
     "Status": "状态",
-    "Is Baseline": "基线版本",
+    "Baseline": "基线版本",
     "StartTime": "开始时间",
     "EndTime": "结束时间",
     "Creation Time": "创建时间",
@@ -208,7 +218,10 @@ export default {
     "Error": "已失败",
     "Refresh": "刷新",
     "Run": "运行",
-    "Back": "返回"
+    "Back": "返回",
+    "Console": "控制台",
+    "Callback": "回调",
+    "Schedule": "定时任务"
   }
 }
 </i18n>

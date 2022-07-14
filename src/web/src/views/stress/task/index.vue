@@ -14,8 +14,8 @@
         </template>
       </el-table-column>
       <el-table-column :label="$t('Scene')" align="left" width="140">
-        <template slot-scope="scope">
-          <span>{{ scope.row.sceneName }}</span>
+        <template slot-scope="{row}">
+          <el-button type="text" @click="toScene(row)">{{ row.sceneName }}</el-button>
         </template>
       </el-table-column>
       <el-table-column :label="$t('Status')" align="center" width="80">
@@ -26,9 +26,16 @@
           <el-tag v-else-if="scope.row.status === 3" type="danger" size="small">{{ $t('Error') }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('Is Baseline')" align="center" width="100">
+      <el-table-column :label="$t('Baseline')" align="center" width="100">
         <template slot-scope="scope">
           <el-switch v-model="scope.row.isBaseline" disabled />
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('From')" align="center" width="100">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.from === 0" type="primary" size="small">{{ $t('Console') }}</el-tag>
+          <el-tag v-else-if="scope.row.from === 1" type="primary" size="small">{{ $t('Callback') }}</el-tag>
+          <el-tag v-else-if="scope.row.from === 2" type="primary" size="small">{{ $t('Schedule') }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column :label="$t('StartTime')" align="left">
@@ -76,6 +83,9 @@ export default {
         this.list = response
       })
     },
+    toScene(row) {
+      this.$router.push({ name: 'stress-scene-detail', params: { id: row.sceneId }})
+    },
     report(row) {
       this.$router.push({ name: 'stress-task-report', params: { id: row.id }})
     }
@@ -89,7 +99,7 @@ export default {
     "Stress Test Task": "Stress Test - Task",
     "Scene": "Scene",
     "Status": "Status",
-    "Is Baseline": "Is Baseline",
+    "Baseline": "Baseline",
     "StartTime": "StartTime",
     "EndTime": "EndTime",
     "Creation Time": "Creation Time",
@@ -98,13 +108,16 @@ export default {
     "Waiting": "Waiting",
     "Runing": "Runing",
     "Done": "Done",
-    "Error": "Error"
+    "Error": "Error",
+    "Console": "Console",
+    "Callback": "Callback",
+    "Schedule": "Schedule"
   },
   "zh": {
     "Stress Test Task": "压力测试 - 任务",
     "Scene": "场景",
     "Status": "状态",
-    "Is Baseline": "基线版本",
+    "Baseline": "基线版本",
     "StartTime": "开始时间",
     "EndTime": "结束时间",
     "Creation Time": "创建时间",
@@ -113,7 +126,10 @@ export default {
     "Waiting": "等待中",
     "Runing": "运行中",
     "Done": "已完成",
-    "Error": "已失败"
+    "Error": "已失败",
+    "Console": "控制台",
+    "Callback": "回调",
+    "Schedule": "定时任务"
   }
 }
 </i18n>

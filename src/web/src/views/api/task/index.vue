@@ -14,8 +14,8 @@
         </template>
       </el-table-column>
       <el-table-column :label="$t('Scene')" align="left" width="140">
-        <template slot-scope="scope">
-          <span>{{ scope.row.sceneName }}</span>
+        <template slot-scope="{row}">
+          <el-button type="text" @click="toScene(row)">{{ row.sceneName }}</el-button>
         </template>
       </el-table-column>
       <el-table-column :label="$t('Status')" align="center" width="80">
@@ -24,6 +24,13 @@
           <el-tag v-else-if="scope.row.status === 1" type="primary" size="small">{{ $t('Runing') }}</el-tag>
           <el-tag v-else-if="scope.row.status === 2" type="success" size="small">{{ $t('Done') }}</el-tag>
           <el-tag v-else-if="scope.row.status === 3" type="danger" size="small">{{ $t('Error') }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('From')" align="center" width="100">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.from === 0" type="primary" size="small">{{ $t('Console') }}</el-tag>
+          <el-tag v-else-if="scope.row.from === 1" type="primary" size="small">{{ $t('Callback') }}</el-tag>
+          <el-tag v-else-if="scope.row.from === 2" type="primary" size="small">{{ $t('Schedule') }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column :label="$t('StartTime')" align="left">
@@ -71,6 +78,9 @@ export default {
         this.list = response
       })
     },
+    toScene(row) {
+      this.$router.push({ name: 'api-scene-detail', params: { id: row.sceneId }})
+    },
     report(row) {
       this.$router.push({ name: 'api-task-report', params: { id: row.id }})
     }
@@ -92,7 +102,10 @@ export default {
     "Waiting": "Waiting",
     "Runing": "Runing",
     "Done": "Done",
-    "Error": "Error"
+    "Error": "Error",
+    "Console": "Console",
+    "Callback": "Callback",
+    "Schedule": "Schedule"
   },
   "zh": {
     "Api Test Task": "接口测试 - 任务",
@@ -106,7 +119,10 @@ export default {
     "Waiting": "等待中",
     "Runing": "运行中",
     "Done": "已完成",
-    "Error": "已失败"
+    "Error": "已失败",
+    "Console": "控制台",
+    "Callback": "回调",
+    "Schedule": "定时任务"
   }
 }
 </i18n>

@@ -2,6 +2,7 @@
   <div class="app-container">
     <h3 style="margin-bottom:0px;">{{ $t('Scene Details') }}</h3>
     <el-row type="flex" style="margin-bottom:10px;" justify="end">
+      <el-button type="success" size="mini" @click="run">{{ $t('Run') }}</el-button>
       <el-button type="primary" size="mini" @click="back">{{ $t('Back') }}</el-button>
     </el-row>
     <el-card class="box-card">
@@ -133,6 +134,13 @@
           <el-tag v-else-if="scope.row.status === 3" type="danger" size="small">{{ $t('Error') }}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column :label="$t('From')" align="center" width="100">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.from === 0" type="primary" size="small">{{ $t('Console') }}</el-tag>
+          <el-tag v-else-if="scope.row.from === 1" type="primary" size="small">{{ $t('Callback') }}</el-tag>
+          <el-tag v-else-if="scope.row.from === 2" type="primary" size="small">{{ $t('Schedule') }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('StartTime')" align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.startRunningTime | simpleFormat }}</span>
@@ -161,6 +169,7 @@
 
 <script>
 import { getScene, getTaskOfScene } from '@/api/api-scene'
+import { addTask } from '@/api/api-task'
 
 export default {
   data() {
@@ -200,6 +209,15 @@ export default {
     refresh() {
       this.fetchData()
     },
+    run() {
+      addTask(this.detail.id).then(() => {
+        this.$message({
+          type: 'success',
+          message: 'Run success!'
+        })
+        this.fetchData()
+      })
+    },
     back() {
       this.$router.push({ name: 'api-scene' })
     }
@@ -235,7 +253,11 @@ export default {
     "Done": "Done",
     "Error": "Error",
     "Refresh": "Refresh",
-    "Back": "Back"
+    "Run": "Run",
+    "Back": "Back",
+    "Console": "Console",
+    "Callback": "Callback",
+    "Schedule": "Schedule"
   },
   "zh": {
     "Scene Details": "场景详情",
@@ -263,7 +285,11 @@ export default {
     "Done": "已完成",
     "Error": "已失败",
     "Refresh": "刷新",
-    "Back": "返回"
+    "Run": "运行",
+    "Back": "返回",
+    "Console": "控制台",
+    "Callback": "回调",
+    "Schedule": "定时任务"
   }
 }
 </i18n>
