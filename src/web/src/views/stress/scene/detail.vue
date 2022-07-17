@@ -156,7 +156,7 @@ export default {
       this.$router.push({ name: 'stress-task-report', params: { id: row.id }})
     },
     getCallbackAddress() {
-      return 'http://' + window.location.host + '/api/callbacks/stress-test?sceneId=' + this.detail && this.detail.id + '&caller=test'
+      return 'http://' + window.location.host + '/api/callbacks/stress-test?sceneId=' + (this.detail && this.detail.id) + '&caller=test'
     },
     monitor(row) {
       var url = window.location.protocol + '//' + window.location.hostname + ':8080/?id=' + row.id

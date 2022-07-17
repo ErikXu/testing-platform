@@ -75,7 +75,7 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog :title="$t('Scene')" :visible.sync="formVisible" @close="reset">
+    <el-dialog :title="$t('Scene')" :visible.sync="formVisible">
       <el-form ref="sceneForm" :model="form" label-position="left" label-width="100px" style="width: 600px;" :rules="rules">
         <el-form-item :label="$t('Name')" prop="name">
           <el-input v-model="form.name" autocomplete="off" />
@@ -163,6 +163,7 @@ export default {
             })
             this.fetchData()
             this.formVisible = false
+            this.submiting = false
           })
         } else {
           return false
@@ -170,7 +171,6 @@ export default {
       })
     },
     reset() {
-      this.formVisible = false
       this.$refs.sceneForm.resetFields()
     }
   }

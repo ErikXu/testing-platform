@@ -28,6 +28,13 @@ export function getSceneList() {
   })
 }
 
+export function getStressSceneOptions() {
+  return request({
+    url: '/api/stress-scenes/options',
+    method: 'get'
+  })
+}
+
 export function getScene(id) {
   return request({
     url: `/api/stress-scenes/${id}`,

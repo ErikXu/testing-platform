@@ -7,6 +7,13 @@ export function getSceneList() {
   })
 }
 
+export function getApiSceneOptions() {
+  return request({
+    url: '/api/api-scenes/options',
+    method: 'get'
+  })
+}
+
 export function getScene(id) {
   return request({
     url: `/api/api-scenes/${id}`,

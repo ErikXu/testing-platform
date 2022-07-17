@@ -48,7 +48,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Get scene method list
+        /// Get stress scene method list
         /// </summary>
         [HttpGet("method")]
         public IActionResult MethodList()
@@ -58,7 +58,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Get scene unit list
+        /// Get stress scene unit list
         /// </summary>
         [HttpGet("unit")]
         public IActionResult UnitList()
@@ -68,7 +68,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Get scene content-type list
+        /// Get stress scene content-type list
         /// </summary>
         [HttpGet("content-type")]
         public IActionResult ContentTypeList()
@@ -78,7 +78,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Get scene list
+        /// Get stress scene list
         /// </summary>
         [HttpGet]
         public async Task<IActionResult> List()
@@ -91,7 +91,22 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Get scene by id
+        /// Get stress scene options
+        /// </summary>
+        [HttpGet("options")]
+        public async Task<IActionResult> Options()
+        {
+            var list = await _mongoDbContext.Collection<StressScene>()
+                                            .Find(new BsonDocument())
+                                            .Sort(Builders<StressScene>.Sort.Ascending(n => n.CreationTime))
+                                            .ToListAsync();
+
+            var options = list.Select(n => new Option { Id = n.Id.ToString(), Name = n.Name }).ToList();
+            return Ok(options);
+        }
+
+        /// <summary>
+        /// Get stress scene by id
         /// </summary>
         [HttpGet("{id}", Name = "GetScene")]
         public async Task<IActionResult> Get([FromRoute] string id)
@@ -106,7 +121,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Get tasks of scene
+        /// Get stress tasks of scene
         /// </summary>
         [HttpGet("{id}/tasks")]
         public async Task<IActionResult> ListByScene([FromRoute] string id)
@@ -119,7 +134,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Create scene
+        /// Create stress scene
         /// </summary>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] StressSceneCreateForm form)

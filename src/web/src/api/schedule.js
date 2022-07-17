@@ -7,9 +7,17 @@ export function getScheduleList() {
   })
 }
 
-export function switchDisabled(id) {
+export function switchEnabled(id) {
   return request({
-    url: `/api/schedules/${id}/disabled`,
+    url: `/api/schedules/${id}/enabled`,
     method: 'patch'
+  })
+}
+
+export function addSchedule(form) {
+  return request({
+    url: '/api/schedules',
+    method: 'post',
+    data: form
   })
 }

@@ -31,7 +31,7 @@ namespace WebApi.HostedServices
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("[Init schedule hosted service] is running...");
-            var schedules = _mongoDbContext.Collection<Schedule>().AsQueryable().Where(n => !n.IsDisabled).ToList();
+            var schedules = _mongoDbContext.Collection<Schedule>().AsQueryable().Where(n => n.IsEnabled).ToList();
 
             try
             {

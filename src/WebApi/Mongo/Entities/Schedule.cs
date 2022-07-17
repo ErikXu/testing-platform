@@ -15,7 +15,7 @@ namespace WebApi.Mongo.Entities
 
         public string Description { get; set; }
 
-        public bool IsDisabled { get; set; }
+        public bool IsEnabled { get; set; }
 
         public DateTime CreationTime { get; set; }
     }

@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Models;
 using WebApi.Mongo;
@@ -29,7 +30,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Get scene list
+        /// Get api scene list
         /// </summary>
         [HttpGet]
         public async Task<IActionResult> List()
@@ -39,6 +40,21 @@ namespace WebApi.Controllers
                                             .Sort(Builders<ApiScene>.Sort.Ascending(n => n.CreationTime))
                                             .ToListAsync();
             return Ok(list);
+        }
+
+        /// <summary>
+        /// Get api scene options
+        /// </summary>
+        [HttpGet("options")]
+        public async Task<IActionResult> Options()
+        {
+            var list = await _mongoDbContext.Collection<ApiScene>()
+                                            .Find(new BsonDocument())
+                                            .Sort(Builders<ApiScene>.Sort.Ascending(n => n.CreationTime))
+                                            .ToListAsync();
+
+            var options = list.Select(n => new Option { Id = n.Id.ToString(), Name = n.Name }).ToList();
+            return Ok(options);
         }
 
         /// <summary>
@@ -101,7 +117,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Get tasks of scene
+        /// Get api tasks of scene
         /// </summary>
         [HttpGet("{id}/tasks")]
         public async Task<IActionResult> ListByScene([FromRoute] string id)
@@ -131,6 +147,9 @@ namespace WebApi.Controllers
             return CreatedAtRoute("GetApiScene", new { id = apiScene.Id.ToString() }, apiScene);
         }
 
+        /// <summary>
+        /// Upload collection
+        /// </summary>
         [HttpPost("{id}/collection")]
         public async Task<IActionResult> UploadCollection([FromRoute] string id, IFormFile file)
         {
@@ -150,6 +169,9 @@ namespace WebApi.Controllers
             return Ok(apiScene);
         }
 
+        /// <summary>
+        /// Upload environment
+        /// </summary>
         [HttpPost("{id}/environment")]
         public async Task<IActionResult> UploadEnvironment([FromRoute] string id, IFormFile file)
         {

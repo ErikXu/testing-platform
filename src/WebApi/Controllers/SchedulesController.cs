@@ -104,7 +104,7 @@ namespace WebApi.Controllers
                 TestType = form.TestType,
                 Cron = form.Cron,
                 Description = form.Description,
-                IsDisabled = false,
+                IsEnabled = true,
                 CreationTime = DateTime.UtcNow
             };
 
@@ -115,8 +115,8 @@ namespace WebApi.Controllers
             return CreatedAtRoute("GetSchedule", new { id = schedule.Id.ToString() }, schedule);
         }
 
-        [HttpPatch("{id}/disabled")]
-        public async Task<IActionResult> SwitchDisabled([FromRoute] string id)
+        [HttpPatch("{id}/enabled")]
+        public async Task<IActionResult> SwitchEnabled([FromRoute] string id)
         {
             var schedule = await _mongoDbContext.Collection<Schedule>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
             if (schedule == null)
@@ -125,7 +125,7 @@ namespace WebApi.Controllers
             }
 
             var filter = Builders<Schedule>.Filter.Where(a => a.Id == new ObjectId(id));
-            var update = Builders<Schedule>.Update.Set(n => n.IsDisabled, !schedule.IsDisabled);
+            var update = Builders<Schedule>.Update.Set(n => n.IsEnabled, !schedule.IsEnabled);
             await _mongoDbContext.Collection<Schedule>().FindOneAndUpdateAsync(filter, update);
 
             Enqueue(schedule.Id.ToString());

@@ -52,7 +52,7 @@ namespace WebApi.HostedServices
                 return;
             }
 
-            var schedules = _mongoDbContext.Collection<Schedule>().AsQueryable().Where(n => !n.IsDisabled).ToList();
+            var schedules = _mongoDbContext.Collection<Schedule>().AsQueryable().Where(n => n.IsEnabled).ToList();
 
             try
             {
