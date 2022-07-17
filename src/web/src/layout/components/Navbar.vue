@@ -12,15 +12,13 @@
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
-            <el-dropdown-item>
-              Home
-            </el-dropdown-item>
+            <el-dropdown-item>{{ $t('Home') }}</el-dropdown-item>
           </router-link>
           <a target="_blank" href="https://github.com/ErikXu/testing-platform">
-            <el-dropdown-item>Github</el-dropdown-item>
+            <el-dropdown-item>{{ $t('Github') }}</el-dropdown-item>
           </a>
           <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
+            <span style="display:block;">{{ $t('Log Out') }}</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -144,3 +142,18 @@ export default {
   }
 }
 </style>
+
+<i18n>
+{
+  "en": {
+    "Home": "Home",
+    "Github": "Github",
+    "Log Out": "Log Out"
+  },
+  "zh": {
+    "Home": "主页",
+    "Github": "Github",
+    "Log Out": "登出"
+  }
+}
+</i18n>
