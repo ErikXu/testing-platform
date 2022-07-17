@@ -10,7 +10,7 @@ namespace WebApi.Services
 {
     public interface IStressTaskService
     {
-        public Task<IActionResult> CreateStressTask(string sceneId, StressTaskFrom from);
+        public Task<IActionResult> CreateStressTask(string sceneId, StressTaskFrom from, string caller = null);
     }
 
     public class StressTaskService : ControllerBase, IStressTaskService
@@ -22,7 +22,7 @@ namespace WebApi.Services
             _mongoDbContext = mongoDbContext;
         }
 
-        public async Task<IActionResult> CreateStressTask(string sceneId, StressTaskFrom from)
+        public async Task<IActionResult> CreateStressTask(string sceneId, StressTaskFrom from, string caller = null)
         {
             var stressScene = await _mongoDbContext.Collection<StressScene>()
                                                          .Find(n => n.Id == new ObjectId(sceneId))
@@ -47,6 +47,7 @@ namespace WebApi.Services
                 Unit = stressScene.Unit,
                 Status = StressTaskStatus.Queue,
                 From = from,
+                Caller = caller,
                 CreationTime = DateTime.UtcNow
             };
 

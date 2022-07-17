@@ -6,7 +6,7 @@
       <el-button type="primary" size="mini" @click="back">{{ $t('Back') }}</el-button>
     </el-row>
     <el-card class="box-card">
-      <el-form label-width="40%" size="mini">
+      <el-form label-width="30%" size="mini">
         <el-form-item :label="$t('Id')">
           <span>{{ detail && detail.id }}</span>
         </el-form-item>
@@ -15,6 +15,9 @@
         </el-form-item>
         <el-form-item :label="$t('Description')">
           <span>{{ detail && detail.description }}</span>
+        </el-form-item>
+        <el-form-item :label="$t('Callback Address')">
+          <span>{{ getCallbackAddress() }}</span> <el-button type="success" size="mini" @click="test">{{ $t('Test') }}</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -170,6 +173,7 @@
 <script>
 import { getScene, getTaskOfScene } from '@/api/api-scene'
 import { addTask } from '@/api/api-task'
+import request from '@/utils/request'
 
 export default {
   data() {
@@ -206,6 +210,9 @@ export default {
     report(row) {
       this.$router.push({ name: 'api-task-report', params: { id: row.id }})
     },
+    getCallbackAddress() {
+      return 'http://' + window.location.host + '/api/callbacks/api-test?sceneId=' + this.detail.id + '&caller=test'
+    },
     refresh() {
       this.fetchData()
     },
@@ -220,6 +227,19 @@ export default {
     },
     back() {
       this.$router.push({ name: 'api-scene' })
+    },
+    test() {
+      var url = this.getCallbackAddress()
+      return request({
+        url: url,
+        method: 'get'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: 'Test success!'
+        })
+        this.fetchData()
+      })
     }
   }
 }
@@ -234,6 +254,7 @@ export default {
     "Description": "Description:",
     "Url": "Url:",
     "Method": "Method:",
+    "Callback Address": "Callback Address:",
     "Collection": "Collection",
     "Collection is not uploaded": "Collection is not uploaded!",
     "Collection is invalid, please upload again": "Collection is invalid, please upload again!",
@@ -243,6 +264,7 @@ export default {
     "Upload": "Upload",
     "Task List": "Task List",
     "Status": "Status",
+    "From": "From",
     "StartTime": "StartTime",
     "EndTime": "EndTime",
     "Creation Time": "Creation Time",
@@ -255,6 +277,7 @@ export default {
     "Refresh": "Refresh",
     "Run": "Run",
     "Back": "Back",
+    "Test": "Test",
     "Console": "Console",
     "Callback": "Callback",
     "Schedule": "Schedule"
@@ -266,6 +289,7 @@ export default {
     "Description": "描述:",
     "Url": "Url:",
     "Method": "Method:",
+    "Callback Address": "回调地址:",
     "Collection": "Collection",
     "Collection is not uploaded": "Collection 未上传！",
     "Collection is invalid, please upload again": "Collection 格式有误，请重新上传！",
@@ -275,6 +299,7 @@ export default {
     "Upload": "上传",
     "Task List": "任务列表",
     "Status": "状态",
+    "From": "来源",
     "StartTime": "开始时间",
     "EndTime": "结束时间",
     "Creation Time": "创建时间",
@@ -287,6 +312,7 @@ export default {
     "Refresh": "刷新",
     "Run": "运行",
     "Back": "返回",
+    "Test": "测试",
     "Console": "控制台",
     "Callback": "回调",
     "Schedule": "定时任务"

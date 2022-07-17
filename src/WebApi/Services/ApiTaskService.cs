@@ -10,7 +10,7 @@ namespace WebApi.Services
 {
     public interface IApiTaskService
     {
-        public Task<IActionResult> CreateApiTask(string sceneId, ApiTaskFrom from);
+        public Task<IActionResult> CreateApiTask(string sceneId, ApiTaskFrom from, string caller = null);
     }
 
     public class ApiTaskService : ControllerBase, IApiTaskService
@@ -22,7 +22,7 @@ namespace WebApi.Services
             _mongoDbContext = mongoDbContext;
         }
 
-        public async Task<IActionResult> CreateApiTask(string sceneId, ApiTaskFrom from)
+        public async Task<IActionResult> CreateApiTask(string sceneId, ApiTaskFrom from, string caller = null)
         {
             var apiScene = await _mongoDbContext.Collection<ApiScene>()
                                               .Find(n => n.Id == new ObjectId(sceneId))
@@ -41,6 +41,7 @@ namespace WebApi.Services
                 Environment = apiScene.Environment,
                 Status = ApiTaskStatus.Queue,
                 From = from,
+                Caller = caller,
                 CreationTime = DateTime.UtcNow
             };
 

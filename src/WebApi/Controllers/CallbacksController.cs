@@ -61,7 +61,7 @@ namespace WebApi.Controllers
                 return BadRequest("Stress test callback is not enabled!");
             }
 
-            return await _stressTaskService.CreateStressTask(sceneId, StressTaskFrom.Callback);
+            return await _stressTaskService.CreateStressTask(sceneId, StressTaskFrom.Callback, caller);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace WebApi.Controllers
                 return BadRequest("Api test callback is not enabled!");
             }
 
-            return await _apiTaskService.CreateApiTask(sceneId, ApiTaskFrom.Callback);
+            return await _apiTaskService.CreateApiTask(sceneId, ApiTaskFrom.Callback, caller);
         }
 
         /// <summary>

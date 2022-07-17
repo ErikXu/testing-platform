@@ -6,7 +6,7 @@
       <el-button type="primary" size="mini" @click="back">{{ $t('Back') }}</el-button>
     </el-row>
     <el-card class="box-card">
-      <el-form label-width="40%" size="mini">
+      <el-form label-width="30%" size="mini">
         <el-form-item :label="$t('Id')">
           <span>{{ detail && detail.id }}</span>
         </el-form-item>
@@ -149,7 +149,7 @@ export default {
       this.$router.push({ name: 'stress-task-report', params: { id: row.id }})
     },
     getCallbackAddress() {
-      return 'http://' + window.location.host + '/api/callbacks/stress-test?sceneId=' + this.detail.id
+      return 'http://' + window.location.host + '/api/callbacks/stress-test?sceneId=' + this.detail.id + '&caller=test'
     },
     monitor(row) {
       var url = window.location.protocol + '//' + window.location.hostname + ':8080/?id=' + row.id
@@ -204,6 +204,7 @@ export default {
     "Task List": "Task List",
     "ID": "ID",
     "Status": "Status",
+    "From": "From",
     "Baseline": "Baseline",
     "StartTime": "StartTime",
     "EndTime": "EndTime",
@@ -238,6 +239,7 @@ export default {
     "Task List": "任务列表",
     "ID": "ID",
     "Status": "状态",
+    "From": "来源",
     "Baseline": "基线版本",
     "StartTime": "开始时间",
     "EndTime": "结束时间",
