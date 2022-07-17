@@ -1,6 +1,9 @@
 <template>
   <div class="app-container">
     <h3>{{ $t('Agent') }}</h3>
+    <el-row type="flex" style="margin-bottom:10px;" justify="end">
+      <el-button size="mini" type="primary" @click="refresh">{{ $t('Refresh') }}</el-button>
+    </el-row>
     <el-table
       :data="list"
       border
@@ -67,6 +70,9 @@ export default {
         this.list = response
       })
     },
+    refresh() {
+      this.fetchData()
+    },
     view(row) {
       var url = 'http://' + row.agentAddress + ':' + row.agentPort + '/agent'
       window.open(url)
@@ -90,7 +96,8 @@ export default {
     "Is Active": "Is Active",
     "Creation Time": "Creation Time",
     "Active": "Active",
-    "Inactive": "Inactive"
+    "Inactive": "Inactive",
+    "Refresh": "Refresh"
   },
   "zh": {
     "Agent": "代理终端",
@@ -101,7 +108,8 @@ export default {
     "Is Active": "是否活跃",
     "Creation Time": "创建时间",
     "Active": "活跃",
-    "Inactive": "不活跃"
+    "Inactive": "不活跃",
+    "Refresh": "刷新"
   }
 }
 </i18n>

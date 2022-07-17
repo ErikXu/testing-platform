@@ -2,7 +2,8 @@
   <div class="app-container">
     <h3>{{ $t('Stress Test') }}</h3>
     <el-row type="flex" style="margin-bottom:10px;" justify="end">
-      <el-button size="mini" type="primary" @click="create">{{ $t('Create') }}</el-button>
+      <el-button size="mini" type="success" @click="create">{{ $t('Create') }}</el-button>
+      <el-button size="mini" type="primary" @click="refresh">{{ $t('Refresh') }}</el-button>
     </el-row>
     <el-table
       :data="list"
@@ -198,6 +199,9 @@ export default {
         this.list = response
       })
     },
+    refresh() {
+      this.fetchData()
+    },
     create() {
       this.submiting = false
       this.formVisible = true
@@ -263,7 +267,8 @@ export default {
     "Scene": "Scene",
     "Unit": "Unit",
     "Submit": "Submit",
-    "Reset": "Reset"
+    "Reset": "Reset",
+    "Refresh": "Refresh"
   },
   "zh": {
     "Stress Test": "压力测试 - 场景",
@@ -284,7 +289,8 @@ export default {
     "Scene": "场景",
     "Unit": "单位",
     "Submit": "提交",
-    "Reset": "重置"
+    "Reset": "重置",
+    "Refresh": "刷新"
   }
 }
 </i18n>

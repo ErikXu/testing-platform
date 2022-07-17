@@ -2,7 +2,8 @@
   <div class="app-container">
     <h3>{{ $t('Schedule') }}</h3>
     <el-row type="flex" style="margin-bottom:10px;" justify="end">
-      <el-button size="mini" type="primary" @click="create">{{ $t('Create') }}</el-button>
+      <el-button size="mini" type="success" @click="create">{{ $t('Create') }}</el-button>
+      <el-button size="mini" type="primary" @click="refresh">{{ $t('Refresh') }}</el-button>
     </el-row>
     <el-table
       :data="list"
@@ -125,6 +126,9 @@ export default {
         this.list = response
       })
     },
+    refresh() {
+      this.fetchData()
+    },
     create() {
       this.submiting = false
       this.formVisible = true
@@ -185,7 +189,8 @@ export default {
     "Api Test": "Api Test",
     "Cron Expression": "Cron Expression",
     "Enabled": "Enabled",
-    "Creation Time": "Creation Time"
+    "Creation Time": "Creation Time",
+    "Refresh": "Refresh"
   },
   "zh": {
     "Schedule": "定时任务",
@@ -197,7 +202,8 @@ export default {
     "Api Test": "接口测试",
     "Cron Expression": "Cron 表达式",
     "Enabled": "启用",
-    "Creation Time": "创建时间"
+    "Creation Time": "创建时间",
+    "Refresh": "刷新"
   }
 }
 </i18n>

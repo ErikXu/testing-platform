@@ -1,6 +1,9 @@
 <template>
   <div class="app-container">
     <h3>{{ $t('Stress Test Task') }}</h3>
+    <el-row type="flex" style="margin-bottom:10px;" justify="end">
+      <el-button size="mini" type="primary" @click="refresh">{{ $t('Refresh') }}</el-button>
+    </el-row>
     <el-table
       :data="list"
       border
@@ -83,6 +86,9 @@ export default {
         this.list = response
       })
     },
+    refresh() {
+      this.fetchData()
+    },
     toScene(row) {
       this.$router.push({ name: 'stress-scene-detail', params: { id: row.sceneId }})
     },
@@ -112,7 +118,8 @@ export default {
     "Error": "Error",
     "Console": "Console",
     "Callback": "Callback",
-    "Schedule": "Schedule"
+    "Schedule": "Schedule",
+    "Refresh": "Refresh"
   },
   "zh": {
     "Stress Test Task": "压力测试 - 任务",
@@ -131,7 +138,8 @@ export default {
     "Error": "已失败",
     "Console": "控制台",
     "Callback": "回调",
-    "Schedule": "定时任务"
+    "Schedule": "定时任务",
+    "Refresh": "刷新"
   }
 }
 </i18n>
