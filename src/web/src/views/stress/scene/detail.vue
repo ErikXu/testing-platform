@@ -34,6 +34,9 @@
         <el-form-item :label="$t('Duration')">
           <span>{{ detail && (detail.duration + detail.unit) }}</span>
         </el-form-item>
+        <el-form-item :label="$t('Callback Address')">
+          <span>{{ getCallbackAddress() }}</span> <el-button type="success" size="mini" @click="test">{{ $t('Test') }}</el-button>
+        </el-form-item>
       </el-form>
     </el-card>
     <h3 style="margin-bottom:0px;">{{ $t('Task List') }}</h3>
@@ -115,6 +118,7 @@
 <script>
 import { getScene, getTaskOfScene } from '@/api/stress-scene'
 import { switchBaseline, addTask } from '@/api/stress-task'
+import request from '@/utils/request'
 
 export default {
   data() {
@@ -144,6 +148,9 @@ export default {
     report(row) {
       this.$router.push({ name: 'stress-task-report', params: { id: row.id }})
     },
+    getCallbackAddress() {
+      return 'http://' + window.location.host + '/api/callbacks/stress-test?sceneId=' + this.detail.id
+    },
     monitor(row) {
       var url = window.location.protocol + '//' + window.location.hostname + ':8080/?id=' + row.id
       window.open(url)
@@ -162,6 +169,19 @@ export default {
     },
     back() {
       this.$router.push({ name: 'stress-scene' })
+    },
+    test() {
+      var url = this.getCallbackAddress()
+      return request({
+        url: url,
+        method: 'get'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: 'Test success!'
+        })
+        this.fetchData()
+      })
     }
   }
 }
@@ -180,6 +200,7 @@ export default {
     "Thread": "Thread:",
     "Connection": "Connection:",
     "Duration": "Duration:",
+    "Callback Address": "Callback Address:",
     "Task List": "Task List",
     "ID": "ID",
     "Status": "Status",
@@ -197,6 +218,7 @@ export default {
     "Refresh": "Refresh",
     "Run": "Run",
     "Back": "Back",
+    "Test": "Test",
     "Console": "Console",
     "Callback": "Callback",
     "Schedule": "Schedule"
@@ -212,6 +234,7 @@ export default {
     "Thread": "线程数:",
     "Connection": "连接数:",
     "Duration": "持续时间:",
+    "Callback Address": "回调地址:",
     "Task List": "任务列表",
     "ID": "ID",
     "Status": "状态",
@@ -229,6 +252,7 @@ export default {
     "Refresh": "刷新",
     "Run": "运行",
     "Back": "返回",
+    "Test": "测试",
     "Console": "控制台",
     "Callback": "回调",
     "Schedule": "定时任务"
