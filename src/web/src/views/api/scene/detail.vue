@@ -211,7 +211,7 @@ export default {
       this.$router.push({ name: 'api-task-report', params: { id: row.id }})
     },
     getCallbackAddress() {
-      return 'http://' + window.location.host + '/api/callbacks/api-test?sceneId=' + this.detail.id + '&caller=test'
+      return 'http://' + window.location.host + '/api/callbacks/api-test?sceneId=' + this.detail && this.detail.id + '&caller=test'
     },
     refresh() {
       this.fetchData()

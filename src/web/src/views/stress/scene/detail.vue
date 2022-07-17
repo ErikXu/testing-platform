@@ -13,11 +13,18 @@
         <el-form-item :label="$t('Name')">
           <span>{{ detail && detail.name }}</span>
         </el-form-item>
+        <el-form-item :label="$t('Description')">
+          <span>{{ detail && detail.description }}</span>
+        </el-form-item>
         <el-form-item :label="$t('Url')">
           <span>{{ detail && detail.url }}</span>
         </el-form-item>
         <el-form-item :label="$t('Method')">
-          <span>{{ detail && detail.method }}</span>
+          <el-tag v-if="detail && detail.method === 'GET'" size="small" effect="dark" color="#61AFFE" style="border-color: #d9ecff;">{{ detail && detail.method }}</el-tag>
+          <el-tag v-if="detail && detail.method === 'POST'" size="small" effect="dark" color="#49C990" style="border-color: #d9ecff;">{{ detail && detail.method }}</el-tag>
+          <el-tag v-if="detail && detail.method === 'PUT'" size="small" effect="dark" color="#FCA130" style="border-color: #d9ecff;">{{ detail && detail.method }}</el-tag>
+          <el-tag v-if="detail && detail.method === 'PATCH'" size="small" effect="dark" color="#50E3C2" style="border-color: #d9ecff;">{{ detail && detail.method }}</el-tag>
+          <el-tag v-if="detail && detail.method === 'DELETE'" size="small" effect="dark" color="#F93E3E" style="border-color: #d9ecff;">{{ detail && detail.method }}</el-tag>
         </el-form-item>
         <el-form-item :label="$t('Content Type')">
           <span>{{ detail && detail.contentType }}</span>
@@ -149,7 +156,7 @@ export default {
       this.$router.push({ name: 'stress-task-report', params: { id: row.id }})
     },
     getCallbackAddress() {
-      return 'http://' + window.location.host + '/api/callbacks/stress-test?sceneId=' + this.detail.id + '&caller=test'
+      return 'http://' + window.location.host + '/api/callbacks/stress-test?sceneId=' + this.detail && this.detail.id + '&caller=test'
     },
     monitor(row) {
       var url = window.location.protocol + '//' + window.location.hostname + ':8080/?id=' + row.id
@@ -193,6 +200,7 @@ export default {
     "Scene Details": "Scene Details",
     "Id": "Id:",
     "Name": "Name:",
+    "Description": "Description:",
     "Url": "Url:",
     "Method": "Method:",
     "Content Type": "Content Type:",
@@ -228,6 +236,7 @@ export default {
     "Scene Details": "场景详情",
     "Id": "Id:",
     "Name": "名称:",
+    "Description": "描述:",
     "Url": "Url:",
     "Method": "Method:",
     "Content Type": "Content Type:",

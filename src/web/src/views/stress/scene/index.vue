@@ -9,25 +9,35 @@
       border
       fit
       highlight-current-row
+      tooltip-effect="light"
     >
       <el-table-column label="#" align="center" width="55">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column :label="$t('Name')" align="left" width="140">
+      <el-table-column :label="$t('Name')" align="left" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('Url')" align="left">
+      <el-table-column :label="$t('Description')" align="left">
         <template slot-scope="scope">
-          <span>{{ scope.row.url }}</span>
+          <span>{{ scope.row.description }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('Method')" align="center" width="80">
+      <el-table-column :label="$t('Method')" align="left" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.method }}</span>
+          <el-tag v-if="scope.row.method === 'GET'" size="small" effect="dark" color="#61AFFE" style="border-color: #d9ecff;">{{ scope.row.method }}</el-tag>
+          <el-tag v-if="scope.row.method === 'POST'" size="small" effect="dark" color="#49C990" style="border-color: #d9ecff;">{{ scope.row.method }}</el-tag>
+          <el-tag v-if="scope.row.method === 'PUT'" size="small" effect="dark" color="#FCA130" style="border-color: #d9ecff;">{{ scope.row.method }}</el-tag>
+          <el-tag v-if="scope.row.method === 'PATCH'" size="small" effect="dark" color="#50E3C2" style="border-color: #d9ecff;">{{ scope.row.method }}</el-tag>
+          <el-tag v-if="scope.row.method === 'DELETE'" size="small" effect="dark" color="#F93E3E" style="border-color: #d9ecff;">{{ scope.row.method }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('Url')" show-overflow-tooltip align="left">
+        <template slot-scope="scope">
+          <span style="margin-left:5px;">{{ scope.row.url }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('Body')" align="center" width="80">
@@ -66,6 +76,9 @@
       <el-form ref="sceneForm" :model="form" label-position="left" label-width="120px" style="width: 600px;" :rules="rules">
         <el-form-item :label="$t('Name')" prop="name">
           <el-input v-model="form.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item :label="$t('Description')">
+          <el-input v-model="form.description" type="textarea" />
         </el-form-item>
         <el-form-item :label="$t('Url')" prop="url">
           <el-col :span="5">
@@ -148,6 +161,7 @@ export default {
       submiting: false,
       form: {
         name: 'My Scene',
+        description: 'This is my scene',
         url: 'http://localhost/api/tests/get',
         method: 'GET',
         contentType: 'application/json',
@@ -234,6 +248,7 @@ export default {
     "Stress Test": "Stress Test - Scene",
     "Create": "Create",
     "Name": "Name",
+    "Description": "Description",
     "Url": "Url",
     "Method": "Method",
     "Content Type": "Content Type",
@@ -254,6 +269,7 @@ export default {
     "Stress Test": "压力测试 - 场景",
     "Create": "创建",
     "Name": "名称",
+    "Description": "描述",
     "Url": "Url",
     "Method": "Method",
     "Content Type": "Content Type",
