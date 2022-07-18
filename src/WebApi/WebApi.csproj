@@ -11,6 +11,16 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="ShellInABox.js" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="ShellInABox.js">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.17" />
 		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.13" />
