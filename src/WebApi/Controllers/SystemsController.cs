@@ -23,13 +23,16 @@ namespace WebApi.Controllers
         [HttpDelete("reset")]
         public async Task<IActionResult> Reset()
         {
-            await _mongoDbContext.Collection<StressScene>().DeleteManyAsync(new BsonDocument());
-            await _mongoDbContext.Collection<StressTask>().DeleteManyAsync(new BsonDocument());
+            await _mongoDbContext.Collection<Agent>().DeleteManyAsync(new BsonDocument());
             await _mongoDbContext.Collection<ApiScene>().DeleteManyAsync(new BsonDocument());
             await _mongoDbContext.Collection<ApiTask>().DeleteManyAsync(new BsonDocument());
-            await _mongoDbContext.Collection<Device>().DeleteManyAsync(new BsonDocument());
             await _mongoDbContext.Collection<CallbackSetting>().DeleteManyAsync(new BsonDocument());
+            await _mongoDbContext.Collection<Device>().DeleteManyAsync(new BsonDocument());
+            await _mongoDbContext.Collection<SceneAgentMap>().DeleteManyAsync(new BsonDocument());
             await _mongoDbContext.Collection<Schedule>().DeleteManyAsync(new BsonDocument());
+            await _mongoDbContext.Collection<StressScene>().DeleteManyAsync(new BsonDocument());
+            await _mongoDbContext.Collection<StressTask>().DeleteManyAsync(new BsonDocument());
+            
             return NoContent();
         }
     }

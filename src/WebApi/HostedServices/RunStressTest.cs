@@ -115,7 +115,7 @@ namespace WebApi.HostedServices
         {
             try
             {
-                var (code, message) = _commandService.ExecuteBackgroundCommand("shellinaboxd -t -b -p 8080 --no-beep -s '/:nobody:nogroup:/:htop -d 10'");
+                var (code, message) = _commandService.ExecuteBackgroundCommand("shellinaboxd -t -b -p 8080 -f '/ShellInABox.js:/app/ShellInABox.js' --no-beep -s '/:nobody:nogroup:/:htop -d 10'");
                 if (code != 0)
                 {
                     _logger.LogError(message);
