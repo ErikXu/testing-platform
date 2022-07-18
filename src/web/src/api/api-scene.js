@@ -21,7 +21,7 @@ export function getScene(id) {
   })
 }
 
-export function getTaskOfScene(id) {
+export function getTasksOfScene(id) {
   return request({
     url: `/api/api-scenes/${id}/tasks`,
     method: 'get'

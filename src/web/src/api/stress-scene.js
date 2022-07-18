@@ -42,9 +42,16 @@ export function getScene(id) {
   })
 }
 
-export function getTaskOfScene(id) {
+export function getTasksOfScene(id) {
   return request({
     url: `/api/stress-scenes/${id}/tasks`,
+    method: 'get'
+  })
+}
+
+export function getAgentsOfScene(id) {
+  return request({
+    url: `/api/stress-scenes/${id}/agents`,
     method: 'get'
   })
 }
@@ -54,5 +61,20 @@ export function addScene(form) {
     url: '/api/stress-scenes',
     method: 'post',
     data: form
+  })
+}
+
+export function addAgent(id, form) {
+  return request({
+    url: `/api/stress-scenes/${id}/agents`,
+    method: 'post',
+    data: form
+  })
+}
+
+export function removeAgent(id, agentId) {
+  return request({
+    url: `/api/stress-scenes/${id}/agents?agentId=${agentId}`,
+    method: 'delete'
   })
 }

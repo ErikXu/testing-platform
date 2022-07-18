@@ -30,7 +30,7 @@ namespace WebApi.Controllers
             await _mongoDbContext.Collection<Device>().DeleteManyAsync(new BsonDocument());
             await _mongoDbContext.Collection<CallbackSetting>().DeleteManyAsync(new BsonDocument());
             await _mongoDbContext.Collection<Schedule>().DeleteManyAsync(new BsonDocument());
-            return Ok();
+            return NoContent();
         }
     }
 }

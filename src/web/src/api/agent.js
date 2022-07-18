@@ -6,3 +6,10 @@ export function getAgentList() {
     method: 'get'
   })
 }
+
+export function getAgentOptions() {
+  return request({
+    url: '/api/agents/options',
+    method: 'get'
+  })
+}

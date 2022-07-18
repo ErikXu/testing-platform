@@ -2,7 +2,9 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using WebApi.Models;
 using WebApi.Mongo;
 using WebApi.Mongo.Entities;
 
@@ -38,6 +40,21 @@ namespace WebApi.Controllers
             }
 
             return Ok(agents);
+        }
+
+        /// <summary>
+        /// Get agent options
+        /// </summary>
+        [HttpGet("options")]
+        public async Task<IActionResult> Options()
+        {
+            var list = await _mongoDbContext.Collection<Agent>()
+                                            .Find(new BsonDocument())
+                                            .Sort(Builders<Agent>.Sort.Ascending(n => n.CreationTime))
+                                            .ToListAsync();
+
+            var options = list.Select(n => new Option { Id = n.Id.ToString(), Name = n.AgentAddress }).ToList();
+            return Ok(options);
         }
 
         /// <summary>

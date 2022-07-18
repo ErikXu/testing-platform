@@ -120,7 +120,7 @@ namespace WebApi.Controllers
         /// Get api tasks of scene
         /// </summary>
         [HttpGet("{id}/tasks")]
-        public async Task<IActionResult> ListByScene([FromRoute] string id)
+        public async Task<IActionResult> GetTasksByScene([FromRoute] string id)
         {
             var list = await _mongoDbContext.Collection<ApiTask>()
                                             .Find(n => n.SceneId == new ObjectId(id))

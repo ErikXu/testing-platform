@@ -124,13 +124,28 @@ namespace WebApi.Controllers
         /// Get stress tasks of scene
         /// </summary>
         [HttpGet("{id}/tasks")]
-        public async Task<IActionResult> ListByScene([FromRoute] string id)
+        public async Task<IActionResult> GetTasksByScene([FromRoute] string id)
         {
             var list = await _mongoDbContext.Collection<StressTask>()
                                             .Find(n => n.SceneId == new ObjectId(id))
                                             .Sort(Builders<StressTask>.Sort.Descending(n => n.CreationTime))
                                             .ToListAsync();
             return Ok(list);
+        }
+
+        /// <summary>
+        /// Get stress agents of scene
+        /// </summary>
+        [HttpGet("{id}/agents")]
+        public async Task<IActionResult> GetAgentsByScene([FromRoute] string id)
+        {
+            var mappings = await _mongoDbContext.Collection<SceneAgentMap>()
+                                            .Find(n => n.SceneId == new ObjectId(id))
+                                            .ToListAsync();
+
+            var agentIds = mappings.Select(m => m.AgentId).ToList();
+            var agents = _mongoDbContext.Collection<Agent>().AsQueryable().Where(n => agentIds.Contains(n.Id)).ToList();
+            return Ok(agents);
         }
 
         /// <summary>
@@ -144,6 +159,48 @@ namespace WebApi.Controllers
             await _mongoDbContext.Collection<StressScene>().InsertOneAsync(scene);
 
             return CreatedAtRoute("GetScene", new { id = scene.Id.ToString() }, scene);
+        }
+
+        /// <summary>
+        /// Add agent to scene
+        /// </summary>
+        [HttpPost("{id}/agents")]
+        public async Task<IActionResult> AddAgent([FromRoute] string id, [FromBody] AddAgentForm form)
+        {
+            var scene = await _mongoDbContext.Collection<StressScene>().Find(n => n.Id == new ObjectId(id)).SingleOrDefaultAsync();
+            if (scene == null)
+            {
+                return NotFound();
+            }
+
+            var agent = await _mongoDbContext.Collection<Agent>().Find(n => n.Id == new ObjectId(form.AgentId)).SingleOrDefaultAsync();
+            if (agent == null)
+            {
+                return NotFound();
+            }
+
+            var mapping = new SceneAgentMap
+            {
+                SceneId = scene.Id,
+                AgentId = agent.Id
+            };
+
+            await _mongoDbContext.Collection<SceneAgentMap>().InsertOneAsync(mapping);
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Remove agent from scene
+        /// </summary>
+        [HttpDelete("{id}/agents")]
+        public async Task<IActionResult> RemoveAgent([FromRoute] string id, [FromQuery] string agentId)
+        {
+            var removeFilter = Builders<SceneAgentMap>.Filter.Where(n => n.SceneId == new ObjectId(id) && n.AgentId == new ObjectId(agentId));
+
+            await _mongoDbContext.Collection<SceneAgentMap>().DeleteManyAsync(removeFilter);
+
+            return NoContent();
         }
     }
 }

@@ -233,6 +233,7 @@ export default {
             })
             this.fetchData()
             this.formVisible = false
+            this.submiting = false
           })
         } else {
           return false

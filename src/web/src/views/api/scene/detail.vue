@@ -171,7 +171,7 @@
 </template>
 
 <script>
-import { getScene, getTaskOfScene } from '@/api/api-scene'
+import { getScene, getTasksOfScene } from '@/api/api-scene'
 import { addTask } from '@/api/api-task'
 import request from '@/utils/request'
 
@@ -196,7 +196,7 @@ export default {
           this.activeCollection = this.detail.collectionItems[0].name
         }
       })
-      getTaskOfScene(this.id).then(response => {
+      getTasksOfScene(this.id).then(response => {
         this.tasks = response
       })
     },
