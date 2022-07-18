@@ -136,9 +136,7 @@
     </el-dialog>
 
     <el-dialog :title="$t('Body')" :visible.sync="bodyVisible">
-      <pre class="language-none">
-        <code>{{ body }}</code>
-      </pre>
+      <pre class="language-none"><code>{{ body }}</code></pre>
     </el-dialog>
   </div>
 </template>

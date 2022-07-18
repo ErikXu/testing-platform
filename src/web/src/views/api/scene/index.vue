@@ -90,12 +90,21 @@
         <el-button type="primary" :disabled="submiting" :loading="submiting" @click.native.prevent="submit">{{ $t('Submit') }}</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :title="$t('Collection')" :visible.sync="collectionVisible">
+      <pre class="language-json"><code>{{ collection }}</code></pre>
+    </el-dialog>
+
+    <el-dialog :title="$t('Environment')" :visible.sync="environmentVisible">
+      <pre class="language-json"><code>{{ environment }}</code></pre>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getSceneList, addScene } from '@/api/api-scene'
 import { addTask } from '@/api/api-task'
+import 'prismjs/themes/prism-okaidia.css'
 
 export default {
   name: 'ApiScene',
@@ -105,6 +114,10 @@ export default {
       conllectionFileList: [],
       formVisible: false,
       submiting: false,
+      collection: '',
+      collectionVisible: false,
+      environment: '',
+      environmentVisible: false,
       form: {
         name: 'My Scene',
         description: 'This is my scene'
@@ -151,10 +164,12 @@ export default {
       this.fetchData()
     },
     viewCollection(row) {
-      alert('View ' + row.name + "'s conllection")
+      this.collection = row.collection
+      this.collectionVisible = true
     },
     viewEnvironment(row) {
-      alert('View ' + row.name + "'s environment")
+      this.environment = row.environment
+      this.environmentVisible = true
     },
     submit() {
       this.$refs.sceneForm.validate(valid => {
