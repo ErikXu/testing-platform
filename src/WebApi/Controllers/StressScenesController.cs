@@ -144,7 +144,16 @@ namespace WebApi.Controllers
                                             .ToListAsync();
 
             var agentIds = mappings.Select(m => m.AgentId).ToList();
+
             var agents = _mongoDbContext.Collection<Agent>().AsQueryable().Where(n => agentIds.Contains(n.Id)).ToList();
+
+            var now = DateTime.UtcNow;
+
+            foreach (var agent in agents)
+            {
+                agent.IsActive = (now - agent.LastHeartbeat).TotalSeconds < 30;
+            }
+
             return Ok(agents);
         }
 
