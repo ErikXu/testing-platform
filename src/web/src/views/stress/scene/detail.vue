@@ -255,7 +255,8 @@ export default {
 
       this.agentsOfScene.forEach((item) => {
         if (item.isActive) {
-          window.open('http://' + item.agentAddress + ':' + item.monitorPort)
+          var agentUrl = 'http://' + item.agentAddress + ':' + item.monitorPort
+          window.open(agentUrl)
         }
       })
     },
