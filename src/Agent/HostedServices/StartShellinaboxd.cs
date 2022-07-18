@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,10 +12,12 @@ namespace Agent.HostedServices
     public class StartShellinaboxd : IHostedService
     {
         private readonly ILogger<StartShellinaboxd> _logger;
+        private readonly IConfiguration _configuration;
 
-        public StartShellinaboxd(ILogger<StartShellinaboxd> logger)
+        public StartShellinaboxd(ILogger<StartShellinaboxd> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -23,7 +26,12 @@ namespace Agent.HostedServices
 
             try
             {
-                var (code, message) = ExecuteBackgroundCommand("shellinaboxd -t -b -p 5002 --no-beep -s '/:nobody:nogroup:/:htop -d 10'");
+                var clientAddress = _configuration["ClientAddress"];
+                var template = File.ReadAllText("ShellInABox.js.template");
+                var content = template.Replace("{MyTitle}", clientAddress);
+                File.WriteAllText("ShellInABox.js", content);
+
+                var (code, message) = ExecuteBackgroundCommand("shellinaboxd -t -b -p 5002 -f '/ShellInABox.js:/app/ShellInABox.js' --no-beep -s '/:nobody:nogroup:/:htop -d 10'");
                 if (code != 0)
                 {
                     _logger.LogError(message);
@@ -37,7 +45,7 @@ namespace Agent.HostedServices
             return Task.CompletedTask;
         }
 
-        public (int, string) ExecuteBackgroundCommand(string command)
+        private (int, string) ExecuteBackgroundCommand(string command)
         {
             var escapedArgs = command.Replace("\"", "\\\"");
 
