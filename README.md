@@ -1,8 +1,31 @@
 # testing-platform
 
-## Setup MongoDB
+`Testing platform` is a light weight continuous platform for testing. You can use it to do stress testing and api testing, other testing is coming soon. You can use the callback to integrate with you CICD tools like jenkins. What you only need is `docker`.
 
-``` bash
-mkdir -p /opt/mongo
-docker run --name mongo -v /opt/mongo:/etc/mongo -p 27017:27017 -d mongo:4.2
-```
+## Features
+
+- Stress Test
+
+  - [x] wrk
+  - [ ] apache benchmark
+  - [ ] JMeter
+
+- Api Test
+
+  - [x] Postman
+
+- UI Test
+
+  - [ ] selenium
+  
+- Agent
+
+  - [x] Monitor
+
+- Schedule
+
+  - [x] Testing schedule
+
+- Callback
+
+  - [x] Testing callback
