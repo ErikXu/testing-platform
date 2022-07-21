@@ -6,7 +6,7 @@
 
 [English Doc](README.md)
 
-## Features
+## 功能
 
 - 压力测试
 
@@ -18,7 +18,7 @@
 
   - [x] Postman
 
-- 界面测试
+- UI 测试
 
   - [ ] selenium
   
